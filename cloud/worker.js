@@ -77,6 +77,7 @@ export default {
     const url = new URL(request.url);
     try {
       if (url.pathname === "/api/health" && request.method === "GET") {
+        await env.DB.prepare("SELECT 1 AS ok").first();
         return json({ service: "ALI AI COMPANY Cloud Engine", status: "online", model: MODEL, database: "connected" }, 200, origin);
       }
       if (!authorized(request, env)) return json({ error: "رمز المدير غير صحيح أو غير مضبوط." }, 401, origin);
