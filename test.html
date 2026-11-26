@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,21 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ALI AI COMPANY - اختبار المدير</title>
 <style>
-body{margin:0;background:#081321;color:#fff;font-family:Arial;padding:22px}
-main{max-width:650px;margin:30px auto;background:#10243a;padding:22px;border:1px solid #b99a52;border-radius:18px}
-h2{color:#e5c77b}
-textarea{width:100%;height:130px;box-sizing:border-box;padding:14px;border-radius:10px;background:#07111e;color:white;border:1px solid #52657b;font-size:16px}
-button{margin-top:14px;padding:13px 22px;background:#d4b46b;border:0;border-radius:9px;font-weight:bold;font-size:16px}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;padding:15px;border-radius:10px;min-height:70px}
-small{color:#aab8c8}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#081321;color:#f4f0e6;font-family:Arial,sans-serif;padding:20px}
+main{max-width:680px;margin:32px auto;background:#10243a;padding:22px;border:1px solid #b99a52;border-radius:18px}
+h1{color:#e5c77b;font-size:25px}
+p,small{color:#b8c4d1;line-height:1.7}
+textarea{width:100%;min-height:140px;padding:14px;border-radius:10px;background:#07111e;color:white;border:1px solid #52657b;font-size:16px;resize:vertical}
+button{margin-top:14px;padding:13px 22px;background:#d4b46b;color:#101820;border:0;border-radius:9px;font-weight:bold;font-size:16px;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;padding:15px;border-radius:10px;min-height:90px;line-height:1.7}
 </style>
 </head>
 <body>
 <main>
-<h2>ALI AI COMPANY</h2>
+<h1>ALI AI COMPANY</h1>
 <p>المدير التنفيذي — اختبار المحرك الذكي</p>
-<small id="status">جاري فحص الاتصال...</small>
-<textarea id="task" placeholder="اكتب مشروعك هنا..."></textarea>
+<small id="status">جاري فحص اتصال الخادم...</small>
+<p><textarea id="task" placeholder="اكتب طلب مشروعك هنا..."></textarea></p>
 <button id="send">إرسال إلى المدير التنفيذي</button>
 <h3>رد المدير</h3>
 <pre id="result">بانتظار الأمر...</pre>
@@ -29,15 +31,17 @@ small{color:#aab8c8}
 const API="https://ali-ai-company-cloud.omf09947.workers.dev";
 const statusBox=document.getElementById("status");
 const result=document.getElementById("result");
-fetch(API+"/api/health")
-.then(r=>r.json())
-.then(d=>statusBox.textContent="حالة المحرك: "+d.status)
-.catch(()=>statusBox.textContent="تعذر الاتصال بالمحرك");
+const send=document.getElementById("send");
 
-document.getElementById("send").onclick=async()=>{
+fetch(API+"/api/health")
+.then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||r.status);statusBox.textContent="حالة الخادم: "+(d.status||"متصل");})
+.catch(e=>{statusBox.textContent="تعذر فحص الاتصال: "+e.message;});
+
+send.addEventListener("click",async()=>{
  const task=document.getElementById("task").value.trim();
- if(!task){result.textContent="اكتب طلب المشروع أولاً";return}
- result.textContent="المدير يدرس المشروع...";
+ if(!task){result.textContent="اكتب طلب المشروع أولاً.";return;}
+ send.disabled=true;
+ result.textContent="المدير يدرس طلبك...";
  try{
   const r=await fetch(API+"/api/plan",{
    method:"POST",
@@ -47,9 +51,9 @@ document.getElementById("send").onclick=async()=>{
   const data=await r.json();
   result.textContent=JSON.stringify(data,null,2);
  }catch(e){
-  result.textContent="خطأ في الاتصال: "+e.message;
- }
-};
+  result.textContent="تعذر الاتصال: "+e.message;
+ }finally{send.disabled=false;}
+});
 </script>
 </body>
 </html>
