@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081323">
+<title>ALI AI COMPANY | Virtual Office</title>
+<style>
+:root{--bg:#07111f;--panel:#0e1c2e;--panel2:#12243a;--line:#263a52;--gold:#d9b66b;--muted:#91a3b8;--text:#edf3fa;--green:#55c69a;--blue:#6fa9ed}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1c3552 0,transparent 48%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 24px;border-bottom:1px solid #26384c;background:#081321dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:44px;height:44px;border:1px solid var(--gold);border-radius:13px;display:grid;place-items:center;color:var(--gold);font-weight:bold;font-size:18px;box-shadow:0 0 22px #d9b66b25}.brand h1{font-size:17px;letter-spacing:1.5px;margin:0}.brand small{display:block;color:var(--muted);font-size:10px;margin-top:5px;letter-spacing:2px}
+.status{border:1px solid #2a4b48;color:#8ce0bd;background:#102a2a;padding:8px 12px;border-radius:30px;font-size:11px}
+main{max-width:1440px;margin:auto;padding:22px}.intro{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:18px}.intro h2{margin:0 0 8px;font-size:25px}.intro p{margin:0;color:var(--muted);font-size:13px;line-height:1.8}.stats{display:flex;gap:9px;flex-wrap:wrap}.stat{background:#0e1c2e;border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:92px}.stat b{display:block;color:var(--gold);font-size:19px}.stat span{font-size:10px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.office-wrap,.side-card{background:linear-gradient(145deg,#102137,#0b1828);border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 16px 45px #0003}.office-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--line)}.office-head b{font-size:13px}.office-head span{font-size:10px;color:var(--muted)}
+.office{position:relative;min-height:650px;padding:22px;background-color:#0a1726;background-image:linear-gradient(#21344a44 1px,transparent 1px),linear-gradient(90deg,#21344a44 1px,transparent 1px);background-size:28px 28px}
+.room{position:absolute;border:1px solid #53677d;border-radius:12px;background:#12263a;box-shadow:inset 0 0 0 5px #0c1b2c,0 8px 20px #0003}
+.room-label{position:absolute;top:8px;right:12px;color:#b7c6d6;font-size:10px;letter-spacing:.4px}
+.manager-room{top:25px;left:50%;transform:translateX(-50%);width:230px;height:112px;border-color:#b89755;background:#2a2b2b}
+.meeting-room{top:160px;left:24px;width:230px;height:160px}
+.dev-room{top:160px;right:24px;width:calc(100% - 300px);height:160px}
+.team-room{top:345px;left:24px;right:24px;height:260px}
+.desk{position:absolute;width:92px;height:52px;border:1px solid #526b83;border-radius:8px;background:linear-gradient(145deg,#263e55,#172b40);display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 5px 10px #0004}
+.desk:after{content:"";position:absolute;bottom:-5px;left:12px;right:12px;height:4px;background:#0a1420;border-radius:4px}
+.person{width:23px;height:23px;border-radius:50%;background:#d8b779;color:#152234;display:grid;place-items:center;font-size:10px;font-weight:bold;border:2px solid #f3d99f;box-shadow:0 0 12px #d9b66b55}
+.desk em{font-style:normal;font-size:9px;color:#e2eaf3}
+.agent{position:absolute;z-index:3;transition:left 1.15s ease,top 1.15s ease;cursor:pointer}
+.agent .desk{position:relative}.agent.selected .desk{outline:2px solid var(--gold);box-shadow:0 0 20px #d9b66b55}
+.agent .tag{position:absolute;top:56px;right:50%;transform:translateX(50%);font-size:9px;color:#b8c7d7;white-space:nowrap;background:#081522dd;padding:3px 7px;border-radius:8px}
+.agent.busy .person{background:#73b7ed;border-color:#b5d9ff}.agent.meeting .person{background:#74d4a8;border-color:#b6f0d3}
+.controls{display:flex;gap:8px;flex-wrap:wrap;padding:13px 16px;border-top:1px solid var(--line);background:#0b1929}
+button{border:1px solid #344c65;background:#162a40;color:var(--text);border-radius:9px;padding:10px 13px;font:inherit;font-size:11px;cursor:pointer}button:hover{border-color:var(--gold);color:var(--gold)}button.primary{background:linear-gradient(135deg,#c49a4e,#e3c982);color:#172234;border:0;font-weight:bold}
+.side{display:flex;flex-direction:column;gap:14px}.side-card{padding:15px}.side-card h3{font-size:13px;margin:0 0 13px}.agent-list{display:flex;flex-direction:column;gap:7px;max-height:360px;overflow:auto}.agent-row{display:flex;align-items:center;gap:9px;padding:8px;border:1px solid transparent;border-radius:9px;cursor:pointer}.agent-row:hover,.agent-row.active{background:#182c42;border-color:#52647a}.avatar{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:#273d55;color:var(--gold);font-size:11px}.agent-row strong{font-size:10px;display:block}.agent-row small{font-size:9px;color:var(--muted)}.dot{width:7px;height:7px;border-radius:50%;background:#66788b;margin-right:auto}.dot.online{background:var(--green);box-shadow:0 0 8px #55c69a}
+.detail{font-size:11px;color:var(--muted);line-height:1.9}.detail b{color:var(--text)}.log{display:flex;flex-direction:column;gap:9px;max-height:180px;overflow:auto}.log-item{font-size:10px;color:#b7c6d6;border-right:2px solid var(--gold);padding:2px 9px;line-height:1.7}.log-item time{display:block;color:#758ba3;font-size:9px}
+.note{font-size:10px;color:#8fa3b8;line-height:1.8;margin:12px 0 0}.pill{font-size:9px;color:#e7ca8c;border:1px solid #6d5936;padding:4px 7px;border-radius:20px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.intro{display:block}.stats{margin-top:14px}.office{min-height:620px}}
+@media(max-width:560px){header{padding:13px}.brand h1{font-size:13px}.status{font-size:9px}main{padding:13px}.intro h2{font-size:20px}.office{min-height:700px;padding:10px}.manager-room{width:180px}.meeting-room{left:10px;width:42%;top:155px}.dev-room{right:10px;width:calc(58% - 25px);top:155px}.team-room{left:10px;right:10px;top:345px}.side{display:flex}.desk{width:74px;height:46px}.person{width:20px;height:20px}.agent .tag{top:49px;font-size:8px}.office-head{padding:12px}.controls button{flex:1}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="mark">A</div><div><h1>ALI AI COMPANY</h1><small>ONE VISION · MANY AI AGENTS</small></div></div><div class="status">● بيئة المكتب التجريبية</div></header>
+<main>
+<section class="intro"><div><h2>مقر الشركة الافتراضي</h2><p>راقب فريق الوكلاء الذكيين من منظور علوي، اختر أي موظف ووجّهه إلى المدير أو غرفة الاجتماعات.<br>الحركة والحالات في هذه النسخة محاكاة واجهة، وليست تنفيذ مهام ذكاء اصطناعي حقيقياً بعد.</p></div><div class="stats"><div class="stat"><b>15</b><span>موظف افتراضي</span></div><div class="stat"><b id="activeCount">15</b><span>متصلون بالمكتب</span></div><div class="stat"><b id="taskCount">0</b><span>مهام تجريبية</span></div></div></section>
+<div class="layout"><section class="office-wrap"><div class="office-head"><b>المخطط الداخلي — الطابق الأول</b><span>TOP-DOWN OFFICE VIEW</span></div>
+<div class="office" id="office">
+<div class="room manager-room"><span class="room-label">مكتب المدير التنفيذي</span><div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:105px;height:28px;border-radius:7px;background:#705a39;border:1px solid #d4b36d"></div><div style="position:absolute;bottom:48px;left:50%;transform:translateX(-50%);font-size:10px;color:#e7ce9c">CEO · المدير</div></div>
+<div class="room meeting-room"><span class="room-label">غرفة الاجتماعات</span><div style="position:absolute;inset:45px 35px 35px;border-radius:50%;background:#4a5a68;border:2px solid #8294a5"></div></div>
+<div class="room dev-room"><span class="room-label">قسم التطوير والتقنية</span></div>
+<div class="room team-room"><span class="room-label">الإدارة · البحث · العمليات</span></div>
+<div id="agents"></div></div>
+<div class="controls"><button class="primary" id="meetingBtn">بدء اجتماع</button><button id="managerBtn">استدعاء المدير</button><button id="returnBtn">إرجاع الفريق للمكاتب</button><button id="randomBtn">تحريك موظف</button></div></section>
+<aside class="side"><section class="side-card"><h3>فريق الشركة <span class="pill">15 AGENTS</span></h3><div class="agent-list" id="agentList"></div></section><section class="side-card"><h3>بيانات الموظف المحدد</h3><div class="detail" id="detail">اختر موظفاً من القائمة أو من المخطط لعرض معلوماته.</div></section><section class="side-card" style="grid-column:1/-1"><h3>سجل حركة المكتب</h3><div class="log" id="log"><div class="log-item">تم تشغيل بيئة المكتب الافتراضية.<time>الآن</time></div></div><p class="note">المرحلة الحالية: تصميم تفاعلي أولي. المرحلة التالية: ربط الوكلاء بمحرك تنفيذ حقيقي وواجهات نماذج الذكاء الاصطناعي مع سجل مهام وصلاحيات.</p></section></aside></div>
+</main>
+<script>
+const people=[
+['المدير التنفيذي','CEO','الإدارة العليا'],['مساعد المدير','EA','الإدارة'],['مدير المشاريع','PM','إدارة المشاريع'],['المبرمج الأول','DEV','التطوير'],['مطور الواجهات','UI','التطوير'],['مهندس الأنظمة','SYS','التقنية'],['محلل البيانات','DATA','التحليل'],['باحث السوق','RES','البحث'],['كاتب المحتوى','COPY','الإعلام'],['مصمم الهوية','DES','التصميم'],['مسؤول التسويق','MKT','التسويق'],['مسؤول الجودة','QA','الجودة'],['محلل الأعمال','BA','التخطيط'],['منسق العمليات','OPS','العمليات'],['مسؤول الدعم','SUP','الدعم']
+];
+const positions=[[50,10],[43,26],[57,26],[72,26],[82,26],[90,26],[32,55],[45,55],[58,55],[71,55],[84,55],[30,77],[44,77],[58,77],[72,77]];
+const agentsEl=document.getElementById('agents'),listEl=document.getElementById('agentList');let selected=0,tasks=0;
+const agents=people.map((p,i)=>({id:i,name:p[0],code:p[1],dept:p[2],state:'في المكتب',pos:[...positions[i]]}));
+function addLog(s){const d=document.createElement('div');d.className='log-item';d.textContent=s;const t=document.createElement('time');t.textContent=new Date().toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit'});d.append(t);document.getElementById('log').prepend(d)}
+function render(){agentsEl.innerHTML='';listEl.innerHTML='';agents.forEach((a,i)=>{const el=document.createElement('div');el.className='agent'+(i===selected?' selected':'')+(a.state==='في مهمة'?' busy':a.state==='في اجتماع'?' meeting':'');el.style.left=a.pos[0]+'%';el.style.top=a.pos[1]+'%';el.innerHTML='<div class="desk"><span class="person">'+a.code.slice(0,2)+'</span><em>'+String(i+1).padStart(2,'0')+'</em></div><span class="tag">'+a.name+'</span>';el.onclick=()=>select(i);agentsEl.append(el);
+const row=document.createElement('div');row.className='agent-row'+(i===selected?' active':'');row.innerHTML='<div class="avatar">'+a.code.slice(0,2)+'</div><div><strong>'+a.name+'</strong><small>'+a.dept+' · '+a.state+'</small></div><span class="dot online"></span>';row.onclick=()=>select(i);listEl.append(row)});document.getElementById('activeCount').textContent=agents.length}
+function select(i){selected=i;const a=agents[i];document.getElementById('detail').innerHTML='<b>'+a.name+'</b><br>الرمز: '+a.code+'<br>القسم: '+a.dept+'<br>الحالة: '+a.state+'<br><br><button onclick="sendSelected()">إرسال إلى المدير</button> <button onclick="meetSelected()">دعوة للاجتماع</button>';render()}
+function move(a,x,y,state){a.pos=[x,y];a.state=state;render()}
+function sendSelected(){const a=agents[selected];move(a,50,21,'في مهمة');addLog('تم استدعاء '+a.name+' إلى مكتب المدير (محاكاة).')}
+function meetSelected(){const a=agents[selected];move(a,15+Math.random()*8,33+Math.random()*8,'في اجتماع');addLog('توجه '+a.name+' إلى غرفة الاجتماعات (محاكاة).')}
+document.getElementById('meetingBtn').onclick=()=>{agents.forEach((a,i)=>{if(i!==0){a.pos=[10+(i%4)*6,29+Math.floor(i/4)*3];a.state='في اجتماع'}});render();addLog('بدأ اجتماع افتراضي للفريق.');tasks++ ;document.getElementById('taskCount').textContent=tasks};
+document.getElementById('managerBtn').onclick=()=>{select(0);move(agents[0],50,21,'متاح للقاء');addLog('تم تحديد موقع المدير التنفيذي.')}
+document.getElementById('returnBtn').onclick=()=>{agents.forEach((a,i)=>{a.pos=[...positions[i]];a.state='في المكتب'});render();addLog('عاد جميع الموظفين إلى مكاتبهم.')}
+document.getElementById('randomBtn').onclick=()=>{const i=1+Math.floor(Math.random()*(agents.length-1));selected=i;const a=agents[i];move(a,18+Math.random()*65,35+Math.random()*45,'في مهمة');tasks++;document.getElementById('taskCount').textContent=tasks;addLog('تحرك '+a.name+' لتنفيذ مهمة تجريبية.')}
+render();select(0);
+</script></body></html>
