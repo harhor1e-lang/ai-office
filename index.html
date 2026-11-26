@@ -5,7 +5,7 @@
 <header><div class="brand"><div class="mark">A</div><div><h1>ALI AI COMPANY</h1><small>ONE VISION · MANY AI AGENTS</small></div></div><div class="live">● مراقبة المقر من السقف</div></header>
 <main><section class="intro"><div><h2>مبنى الشركة — كاميرا علوية</h2><p>شاهد الطابق من الأعلى كأن السقف شفاف: أشخاص داخل مكاتبهم، ممرات واضحة، مدير، استقبال، قاعة اجتماعات وأقسام عمل.<br>شغّل يوم العمل لمشاهدة الموظفين وهم يتحركون بين الأقسام وينفذون أنشطة تمثيلية.</p></div><div class="stats"><div class="stat"><b id="staffCount">30</b><span>موظفاً</span></div><div class="stat"><b id="atdesks">30</b><span>على مكاتبهم</span></div><div class="stat"><b id="done">0</b><span>أنشطة مكتملة</span></div></div></section>
 <nav class="tabs" aria-label="أقسام الشركة"><button class="active" data-tab="floor">المقر الرئيسي</button><button data-tab="requests">الطلبات</button><button data-tab="employeesTab">الموظفون</button><button data-tab="companyTab">تفاصيل الشركة</button></nav><section class="tabview active" id="floor"><div class="layout"><section class="panel"><div class="panelhead"><b>الطابق الأول — عرض من كاميرا السقف</b><span>TOP-DOWN BUILDING VIEW</span></div><div class="viewport"><canvas id="scene" width="1400" height="1100"></canvas></div><div class="controls"><button class="primary" id="start">▶ تشغيل يوم العمل</button><button id="pause">إيقاف مؤقت</button><button id="call">استدعاء المحدد للمدير</button><button id="meet">اجتماع جماعي</button><button id="return">عودة للمكاتب</button></div></section>
-<aside class="side"><section class="panel"><h3>حركة الشركة</h3><div class="log" id="log"><div>تم فتح كاميرا السقف الافتراضية.<time>الآن</time></div></div><p class="note">مهم: هذه النسخة محاكاة بصرية للأشخاص والحركة والأنشطة. ربط الموظفين بذكاء اصطناعي ينفذ أعمالاً حقيقية سيكون مرحلة تقنية مستقلة تحتاج خادماً ومحرك وكلاء.</p></section><section class="panel"><h3>مكتب المدير التنفيذي — الأوامر</h3><div id="managerChat" style="height:170px;overflow:auto;background:#091827;border:1px solid #344d65;border-radius:9px;padding:9px;margin-bottom:9px"><div style="font-size:10px;line-height:1.9;color:#d9c58e">المدير التنفيذي: أهلاً بك. اكتب توجيهاتك وسأحدد الفريق المختص ضمن نموذج التشغيل الحالي.</div></div><textarea id="managerCommand" rows="3" placeholder="مثال: أعدّوا تقريراً عن أداء الشركة..." style="width:100%;resize:vertical;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:8px;padding:10px;font:12px Tahoma"></textarea><button class="primary" id="sendCommand" style="width:100%;margin-top:8px">إرسال الأمر إلى المدير</button><p class="note">نموذج أولي لتوجيه الأوامر داخل المحاكاة؛ لا يتصل بعد بمحرك ذكاء اصطناعي أو ينفذ أعمالاً خارج الموقع.</p></section></aside></div></section>
+<aside class="side"><section class="panel"><h3>حركة الشركة</h3><div class="log" id="log"><div>تم فتح كاميرا السقف الافتراضية.<time>الآن</time></div></div><p class="note">مهم: هذه النسخة محاكاة بصرية للأشخاص والحركة والأنشطة. ربط الموظفين بذكاء اصطناعي ينفذ أعمالاً حقيقية سيكون مرحلة تقنية مستقلة تحتاج خادماً ومحرك وكلاء.</p></section><section class="panel"><h3>مكتب المدير التنفيذي — الأوامر</h3><div id="managerChat" style="height:170px;overflow:auto;background:#091827;border:1px solid #344d65;border-radius:9px;padding:9px;margin-bottom:9px"><div style="font-size:10px;line-height:1.9;color:#d9c58e">المدير التنفيذي: أهلاً بك. اكتب توجيهاتك وسأحدد الفريق المختص ضمن نموذج التشغيل الحالي.</div></div><textarea id="managerCommand" rows="3" placeholder="مثال: أعدّوا تقريراً عن أداء الشركة..." style="width:100%;resize:vertical;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:8px;padding:10px;font:12px Tahoma"></textarea><button class="primary" id="sendCommand" style="width:100%;margin-top:8px">إرسال الأمر إلى المدير</button><div style="margin-top:12px;padding:10px;border:1px solid #344d65;border-radius:9px;background:#0a1a2a"><b style="font-size:11px;color:#e4c47e">ربط محرك الذكاء الاصطناعي المحلي</b><input id="engineUrl" value="http://127.0.0.1:8787" aria-label="رابط المحرك" style="display:block;width:100%;margin-top:8px;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:7px;padding:9px"><input id="engineToken" type="password" placeholder="رمز ALI_API_TOKEN من ملف .env" aria-label="رمز المحرك" style="display:block;width:100%;margin-top:7px;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:7px;padding:9px"><button id="connectEngine" style="width:100%;margin-top:7px">اتصال بالمحرك المحلي</button><div id="engineStatus" class="note" style="margin:7px 0 0">غير متصل — أوامر المدير الحالية ليست تنفيذاً حقيقياً.</div></div><p class="note">عند الاتصال، يخطط نموذج Ollama المحلي للمشروع ويحفظ المهام في قاعدة بيانات اللابتوب. التنفيذ الفعلي للملفات سيضاف عبر أدوات آمنة وبموافقتك.</p></section></aside></div></section>
 <section class="tabview" id="requests"><section class="panel"><div class="panelhead"><b>سجل الطلبات والتكليفات</b><span>جميع أوامر المدير</span></div><div style="padding:15px"><div id="taskBoard" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="note">لا توجد طلبات بعد. أرسل أمراً من مكتب المدير في تبويب المقر الرئيسي.</div></div><button id="clearTasks" style="margin-top:14px">مسح سجل الطلبات</button><p class="note">السجل محفوظ محلياً على هذا الجهاز. الحالات تمثل المحاكاة ولا تعني تنفيذ العمل خارج الموقع.</p></div></section></section>
 <section class="tabview" id="employeesTab"><div class="directory-grid"><section class="panel"><div class="panelhead"><b>دليل موظفي الشركة</b><span>30 موظفاً — اختر اسماً لعرض التفاصيل</span></div><div class="employees" id="employees" style="padding:12px;max-height:680px"></div></section><section class="panel" style="padding:16px"><h3>بطاقة الموظف</h3><div class="detail" id="detail">اختر موظفاً من القائمة لعرض القسم والمسمى الوظيفي والحالة الحالية.</div></section></div></section>
 <section class="tabview" id="companyTab"><div class="company-grid">
@@ -65,27 +65,46 @@ function renderTasks(){
  });
 }
 function saveTasks(){try{localStorage.setItem('aliCompanyTasks',JSON.stringify(companyTasks))}catch(e){log('تعذر حفظ المهام على هذا الجهاز.')}}
-function sendManagerCommand(){
+let engineConnected=false;
+let engineToken=sessionStorage.getItem('aliEngineToken')||'';
+let engineBase=sessionStorage.getItem('aliEngineUrl')||'http://127.0.0.1:8787';
+document.getElementById('engineUrl').value=engineBase;
+document.getElementById('engineToken').value=engineToken;
+function engineStatus(message,ok=false){const el=document.getElementById('engineStatus');el.textContent=message;el.style.color=ok?'#91e5bf':'#e4c47e'}
+async function connectEngine(){
+ engineBase=document.getElementById('engineUrl').value.trim().replace(/\/$/,'');
+ const token=document.getElementById('engineToken').value.trim();
+ if(!engineBase||!token){engineStatus('أدخل رابط المحرك والرمز أولاً.');return}
+ engineStatus('جارٍ فحص المحرك والتحقق من الرمز...');
+ try{
+  const health=await fetch(engineBase+'/api/health');if(!health.ok)throw new Error('المحرك غير متاح');
+  const h=await health.json();
+  const auth=await fetch(engineBase+'/api/projects',{headers:{Authorization:'Bearer '+token}});
+  if(!auth.ok)throw new Error(auth.status===401?'الرمز غير صحيح':auth.status===503?'إعداد الرمز غير مكتمل':'تعذر التحقق من الصلاحية');
+  const projects=await auth.json();
+  engineToken=token;engineConnected=true;sessionStorage.setItem('aliEngineToken',token);sessionStorage.setItem('aliEngineUrl',engineBase);
+  engineStatus('متصل بالمحرك المحلي — Ollama: '+h.ollama+' — مشاريع محفوظة: '+projects.length,true);
+  log('تم الاتصال بمحرك الشركة المحلي.');
+ }catch(e){engineConnected=false;engineStatus('فشل الاتصال: '+e.message+' — تأكد أن الخادم يعمل وأن إعدادات CORS صحيحة.')}
+}
+async function sendManagerCommand(){
  const input=document.getElementById('managerCommand'),chat=document.getElementById('managerChat'),raw=input.value.trim();if(!raw)return;
  const user=document.createElement('div');user.style.cssText='margin:8px 0;padding:8px;background:#17334b;border-radius:8px;font-size:10px;line-height:1.8';user.textContent='أنت: '+raw;chat.append(user);
- let keys=[];
- if(/برمج|تقن|موقع|تطبيق|نظام|كود|مشكلة|ويب|بايثون|python|أتمتة|automation/.test(raw))keys.push('التطوير','التقنية','الويب','التطبيقات','الأتمتة');
- if(/تقرير|تحليل|بيانات|أداء|إحصائ|دراسة/.test(raw))keys.push('البيانات','التخطيط','الجودة');
- if(/تسويق|إعلان|عميل|سوق|محتوى|تصميم|هوية|جرافيك|واجهة|تجربة المستخدم|فيديو|بلندر|blender|ثلاثي|3d|تحريك/.test(raw))keys.push('التسويق','الإعلام','التصميم','البحث','بلندر');
- if(/محاسب|حساب|ميزانية|مالي|فاتورة/.test(raw))keys.push('المالية');
- if(/خدمة العملاء|عميل|دعم فني|استفسار/.test(raw))keys.push('خدمة العملاء','الدعم');
- if(/ذكاء اصطناعي|claude|كلود|chatgpt|gemini|prompt|برومبت/.test(raw))keys.push('الذكاء الاصطناعي');
- if(/تشغيل|تنظيم|إدارة|خطة|مشروع|فريق/.test(raw))keys.push('الإدارة','العمليات');
- if(!keys.length)keys=['الإدارة'];
- const chosen=agents.filter(a=>keys.includes(a.dept));const team=chosen.length?chosen.map(a=>a.name):['المدير التنفيذي'];
- const task={id:taskSeq++,command:raw,team,status:'بانتظار التنفيذ',created:new Date().toISOString()};
- companyTasks.push(task);if(companyTasks.length>40)companyTasks.shift();saveTasks();renderTasks();
- chosen.forEach((a,i)=>{a.task='المهمة #'+task.id+': '+raw;a.state='مكلف بمهمة'});
- const lead=chosen.find(a=>!a.path.length&&!a.wait);if(lead)route(lead,'manager');
- const reply=document.createElement('div');reply.style.cssText='margin:8px 0;padding:8px;background:#12352c;border:1px solid #326b59;border-radius:8px;font-size:10px;line-height:1.9;color:#d9f2e5';
- reply.textContent='المدير التنفيذي: سجلت المهمة رقم '+task.id+' وكلفت '+team.length+' من أعضاء الفريق. الحالة: بانتظار التنفيذ. التوزيع الحالي تجريبي وليس تحليلاً ذكياً بعد.';
- chat.append(reply);chat.scrollTop=chat.scrollHeight;input.value='';log('سُجلت المهمة #'+task.id+' وكُلّف بها '+team.length+' موظفاً.');if(chosen.length)select(chosen[0].id);
+ if(engineConnected){
+  const reply=document.createElement('div');reply.style.cssText='margin:8px 0;padding:8px;background:#12352c;border:1px solid #326b59;border-radius:8px;font-size:10px;line-height:1.9;color:#d9f2e5';reply.textContent='المدير التنفيذي: أحلل المشروع باستخدام نموذج الذكاء الاصطناعي المحلي...';chat.append(reply);chat.scrollTop=chat.scrollHeight;
+  try{
+   const response=await fetch(engineBase+'/api/projects/plan',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+engineToken},body:JSON.stringify({brief:raw})});
+   const data=await response.json();if(!response.ok)throw new Error(data.detail||'تعذر إعداد خطة المشروع');
+   reply.textContent='المدير التنفيذي: أعددت خطة حقيقية وحفظت المشروع في قاعدة بيانات اللابتوب. '+data.title+' — '+data.tasks.length+' مهام. الحالة: بانتظار التنفيذ.';
+   const board=document.getElementById('taskBoard');board.innerHTML='';
+   data.tasks.forEach((t,i)=>{const card=document.createElement('div');card.className='task-card';const title=document.createElement('strong');title.style.color='#e4c47e';title.textContent=(i+1)+'. '+t.title;const dept=document.createElement('div');dept.className='task-meta';dept.textContent='القسم: '+t.department;const desc=document.createElement('div');desc.style.cssText='margin-top:6px;color:#eef4fa';desc.textContent=t.description;const status=document.createElement('div');status.className='task-meta';status.textContent='الحالة: بانتظار التنفيذ';card.append(title,dept,desc,status);board.append(card)});
+   log('أنشأ المدير خطة مشروع حقيقية وحفظ '+data.tasks.length+' مهام في قاعدة بيانات اللابتوب.');
+  }catch(e){reply.textContent='تعذر إنشاء الخطة: '+e.message;log('فشل الاتصال بمحرك الذكاء الاصطناعي: '+e.message)}
+  input.value='';return;
+ }
+ const warn=document.createElement('div');warn.style.cssText='margin:8px 0;padding:8px;background:#3a2b16;border:1px solid #8d6b29;border-radius:8px;font-size:10px;line-height:1.9;color:#ffe8b1';warn.textContent='المحرك المحلي غير متصل. لم يتم إنشاء مهمة حقيقية أو تكليف موظفين. اربط Ollama من لوحة الاتصال أعلاه بعد تجهيز اللابتوب.';chat.append(warn);chat.scrollTop=chat.scrollHeight;
 }
+document.getElementById('connectEngine').onclick=connectEngine;
 function select(i){selected=i;let a=agents[i];document.getElementById('detail').innerHTML='<b>'+a.name+'</b><br>القسم: '+a.dept+'<br>المكتب: '+(i+1)+'<br>الحالة: '+a.state+'<br>النشاط: '+a.task;document.querySelectorAll('.employee').forEach((e,j)=>e.classList.toggle('active',j===i));render()}
 names.forEach((p,i)=>{let e=document.createElement('div');e.className='employee'+(i===0?' active':'');e.innerHTML='<div class="face">'+p[1].slice(0,2)+'</div><div><strong>'+p[0]+'</strong><small>'+p[2]+'</small></div>';e.onclick=()=>select(i);document.getElementById('employees').append(e)});
 function call(){let a=agents[selected];if(a.path.length||a.wait){log('الموظف مشغول حالياً.');return}route(a,'manager');log('توجه '+a.name+' إلى مكتب المدير.')}
