@@ -1,6 +1,7 @@
 name = "ali-ai-company-cloud"
 main = "worker.js"
 compatibility_date = "2026-11-26"
+migrations_dir = "migrations"
 
 [ai]
 binding = "AI"
