@@ -13,7 +13,7 @@ const rooms=[{x:45,y:300,w:420,h:285,n:'الإدارة والعمليات',col:'
 const desks=[];rooms.forEach((r,k)=>[[r.x+115,r.y+125],[r.x+305,r.y+125],[r.x+115,r.y+235],[r.x+305,r.y+235],[r.x+210,r.y+235]].forEach(p=>desks.push({x:p[0],y:p[1],room:k})));
 const agents=names.map((n,i)=>({id:i,name:n[0],code:n[1],dept:n[2],x:desks[i].x,y:desks[i].y+37,home:{x:desks[i].x,y:desks[i].y+37},path:[],state:'على مكتبه',task:'يعمل على الحاسوب',wait:0,phase:i*.7}));
 let selected=0,running=false,last=0,clock=0,done=0;
-const manager={x:205,y:155},meeting={x:590,y:155};
+const manager={x:205,y:155};
 function box(x,y,w,h,col,stroke='#72889b',lw=3){c.fillStyle=col;c.fillRect(x,y,w,h);c.strokeStyle=stroke;c.lineWidth=lw;c.strokeRect(x,y,w,h)}
 function txt(t,x,y,size=15,col='#e6eef5'){c.fillStyle=col;c.font='bold '+size+'px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(t,x,y)}
 function desk(x,y){c.fillStyle='#0006';c.fillRect(x-48,y-20,96,58);box(x-49,y-24,98,52,'#765a3b','#c5a36b',2);c.fillStyle='#172d40';c.fillRect(x-18,y-18,36,22);c.fillStyle='#86abc2';c.fillRect(x-15,y-15,30,16);c.fillStyle='#d7b97e';c.fillRect(x-10,y+9,20,4);c.fillStyle='#253d50';c.beginPath();c.arc(x,y+51,14,0,Math.PI*2);c.fill();c.strokeStyle='#718ba0';c.stroke()}
