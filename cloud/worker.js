@@ -63,6 +63,7 @@ Create 3 to 8 sequential tasks. Each task must have a concrete deliverable and c
 export default {
   async fetch(request, env) {
     const origin = getOrigin(request, env);
+    const url = new URL(request.url);
     if (request.method === "OPTIONS") {
       if (!origin) return new Response(null, { status: 403 });
       return new Response(null, { status: 204, headers: {
@@ -73,13 +74,17 @@ export default {
         "vary": "Origin"
       }});
     }
-    if (!origin) return json({ error: "Origin not allowed" }, 403, "null");
-    const url = new URL(request.url);
-    try {
-      if (url.pathname === "/api/health" && request.method === "GET") {
+    // Public health check: allow direct browser navigation (no Origin header).
+    if (url.pathname === "/api/health" && request.method === "GET") {
+      try {
         await env.DB.prepare("SELECT 1 AS ok").first();
-        return json({ service: "ALI AI COMPANY Cloud Engine", status: "online", model: MODEL, database: "connected" }, 200, origin);
+        return json({ service: "ALI AI COMPANY Cloud Engine", status: "online", model: MODEL, database: "connected" }, 200, origin || "null");
+      } catch (error) {
+        return json({ service: "ALI AI COMPANY Cloud Engine", status: "degraded", database: "error", error: error?.message || "Database check failed" }, 500, origin || "null");
       }
+    }
+    if (!origin) return json({ error: "Origin not allowed" }, 403, "null");
+    try {
       if (!authorized(request, env)) return json({ error: "رمز المدير غير صحيح أو غير مضبوط." }, 401, origin);
 
       if (url.pathname === "/api/projects/plan" && request.method === "POST") {
