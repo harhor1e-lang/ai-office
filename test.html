@@ -1,1 +1,55 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALI AI COMPANY - اختبار المدير</title>
+<style>
+body{margin:0;background:#081321;color:#fff;font-family:Arial;padding:22px}
+main{max-width:650px;margin:30px auto;background:#10243a;padding:22px;border:1px solid #b99a52;border-radius:18px}
+h2{color:#e5c77b}
+textarea{width:100%;height:130px;box-sizing:border-box;padding:14px;border-radius:10px;background:#07111e;color:white;border:1px solid #52657b;font-size:16px}
+button{margin-top:14px;padding:13px 22px;background:#d4b46b;border:0;border-radius:9px;font-weight:bold;font-size:16px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;padding:15px;border-radius:10px;min-height:70px}
+small{color:#aab8c8}
+</style>
+</head>
+<body>
+<main>
+<h2>ALI AI COMPANY</h2>
+<p>المدير التنفيذي — اختبار المحرك الذكي</p>
+<small id="status">جاري فحص الاتصال...</small>
+<textarea id="task" placeholder="اكتب مشروعك هنا..."></textarea>
+<button id="send">إرسال إلى المدير التنفيذي</button>
+<h3>رد المدير</h3>
+<pre id="result">بانتظار الأمر...</pre>
+</main>
+<script>
+const API="https://ali-ai-company-cloud.omf09947.workers.dev";
+const statusBox=document.getElementById("status");
+const result=document.getElementById("result");
+fetch(API+"/api/health")
+.then(r=>r.json())
+.then(d=>statusBox.textContent="حالة المحرك: "+d.status)
+.catch(()=>statusBox.textContent="تعذر الاتصال بالمحرك");
+
+document.getElementById("send").onclick=async()=>{
+ const task=document.getElementById("task").value.trim();
+ if(!task){result.textContent="اكتب طلب المشروع أولاً";return}
+ result.textContent="المدير يدرس المشروع...";
+ try{
+  const r=await fetch(API+"/api/plan",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({task})
+  });
+  const data=await r.json();
+  result.textContent=JSON.stringify(data,null,2);
+ }catch(e){
+  result.textContent="خطأ في الاتصال: "+e.message;
+ }
+};
+</script>
+</body>
+</html>
