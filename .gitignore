@@ -1,6 +1,6 @@
-backend/.env
-backend/.venv/
-backend/__pycache__/
-backend/data/
-*.py[cod]
+.env
+.dev.vars
+.wrangler/
+cloud/.dev.vars
+cloud/.env
 .DS_Store
