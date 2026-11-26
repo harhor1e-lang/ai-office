@@ -1,59 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ALI AI COMPANY - اختبار المدير</title>
+<meta name="theme-color" content="#081321">
+<title>ALI AI COMPANY — اختبار المدير التنفيذي</title>
 <style>
-:root{color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#081321;color:#f4f0e6;font-family:Arial,sans-serif;padding:20px}
-main{max-width:680px;margin:32px auto;background:#10243a;padding:22px;border:1px solid #b99a52;border-radius:18px}
-h1{color:#e5c77b;font-size:25px}
-p,small{color:#b8c4d1;line-height:1.7}
-textarea{width:100%;min-height:140px;padding:14px;border-radius:10px;background:#07111e;color:white;border:1px solid #52657b;font-size:16px;resize:vertical}
-button{margin-top:14px;padding:13px 22px;background:#d4b46b;color:#101820;border:0;border-radius:9px;font-weight:bold;font-size:16px;cursor:pointer}
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#081321;color:#f4f0e6;font-family:Tahoma,Arial,sans-serif;padding:18px}
+main{max-width:720px;margin:24px auto;background:#10243a;padding:22px;border:1px solid #b99a52;border-radius:18px}
+h1{color:#e5c77b;font-size:24px}p,small{color:#b8c4d1;line-height:1.8}
+input,textarea{display:block;width:100%;margin:10px 0;padding:13px;border-radius:10px;background:#07111e;color:white;border:1px solid #52657b;font:inherit}
+textarea{min-height:130px;resize:vertical}
+button{padding:13px 20px;background:#d4b46b;color:#101820;border:0;border-radius:9px;font-weight:bold;font-size:15px;cursor:pointer}
 button:disabled{opacity:.6;cursor:wait}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;padding:15px;border-radius:10px;min-height:90px;line-height:1.7}
-</style>
-</head>
-<body>
-<main>
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;padding:15px;border-radius:10px;min-height:90px;line-height:1.8}
+#status{display:block;padding:10px;border:1px solid #52657b;border-radius:9px}
+</style></head>
+<body><main>
 <h1>ALI AI COMPANY</h1>
-<p>المدير التنفيذي — اختبار المحرك الذكي</p>
-<small id="status">جاري فحص اتصال الخادم...</small>
-<p><textarea id="task" placeholder="اكتب طلب مشروعك هنا..."></textarea></p>
+<p>المدير التنفيذي — اختبار المحرك السحابي</p>
+<small id="status">جارٍ فحص اتصال الخادم...</small>
+<label for="token">رمز المدير السري (ADMIN_TOKEN)</label>
+<input id="token" type="password" autocomplete="off" placeholder="أدخل الرمز الذي أعددته في Cloudflare">
+<label for="task">طلب المشروع</label>
+<textarea id="task" placeholder="اكتب وصف المشروع الذي تريد من المدير التخطيط له..."></textarea>
 <button id="send">إرسال إلى المدير التنفيذي</button>
-<h3>رد المدير</h3>
-<pre id="result">بانتظار الأمر...</pre>
+<h3>رد المدير</h3><pre id="result">بانتظار الأمر...</pre>
 </main>
 <script>
 const API="https://ali-ai-company-cloud.omf09947.workers.dev";
 const statusBox=document.getElementById("status");
 const result=document.getElementById("result");
 const send=document.getElementById("send");
-
-fetch(API+"/api/health")
-.then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||r.status);statusBox.textContent="حالة الخادم: "+(d.status||"متصل");})
+fetch(API+"/api/health").then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||r.status);statusBox.textContent="حالة الخادم: "+(d.status||"متصل")+" — "+(d.model||"");})
 .catch(e=>{statusBox.textContent="تعذر فحص الاتصال: "+e.message;});
-
 send.addEventListener("click",async()=>{
  const task=document.getElementById("task").value.trim();
- if(!task){result.textContent="اكتب طلب المشروع أولاً.";return;}
- send.disabled=true;
- result.textContent="المدير يدرس طلبك...";
+ const token=document.getElementById("token").value.trim();
+ if(task.length<8){result.textContent="اكتب وصفاً لا يقل عن 8 أحرف.";return;}
+ if(!token){result.textContent="أدخل رمز المدير السري أولاً.";return;}
+ send.disabled=true;result.textContent="المدير يدرس الطلب ويُنشئ خطة...";
  try{
-  const r=await fetch(API+"/api/plan",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({task})
-  });
-  const data=await r.json();
+  const headers={"Content-Type":"application/json","Authorization":"Bearer "+token};
+  const check=await fetch(API+"/api/projects",{headers});
+  if(!check.ok)throw new Error(check.status===401?"رمز المدير غير صحيح.": "تعذر التحقق من صلاحية المدير ("+check.status+").");
+  const r=await fetch(API+"/api/projects/plan",{method:"POST",headers,body:JSON.stringify({brief:task})});
+  const data=await r.json();if(!r.ok)throw new Error(data.error||"تعذر إعداد الخطة.");
   result.textContent=JSON.stringify(data,null,2);
- }catch(e){
-  result.textContent="تعذر الاتصال: "+e.message;
- }finally{send.disabled=false;}
+ }catch(e){result.textContent="تعذر إكمال الطلب: "+e.message;}
+ finally{send.disabled=false;}
 });
-</script>
-</body>
-</html>
+</script></body></html>
