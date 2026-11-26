@@ -90,12 +90,15 @@ export default {
         const projectId = crypto.randomUUID();
         const now = new Date().toISOString();
         await env.DB.prepare(
-          "INSERT INTO projects (id,title,brief,status,created_at) VALUES(?,?,?,?,?)"
+          "INSERT INTO projects (id,title,description,status,created_at) VALUES(?,?,?,?,?)"
         ).bind(projectId, plan.title, brief, "planned", now).run();
         const statements = plan.tasks.map(task => env.DB.prepare(
           "INSERT INTO tasks (id,project_id,title,department,description,status,created_at) VALUES(?,?,?,?,?,?,?)"
         ).bind(crypto.randomUUID(), projectId, task.title, task.department, task.description, "pending", now));
         if (statements.length) await env.DB.batch(statements);
+        await env.DB.prepare(
+          "INSERT INTO activity_log (id,project_id,actor,action,details,created_at) VALUES(?,?,?,?,?,?)"
+        ).bind(crypto.randomUUID(), projectId, "المدير التنفيذي", "إنشاء مشروع", `تم حفظ المشروع: ${plan.title} — ${plan.tasks.length} مهام`, now).run();
         return json({
           project_id: projectId, title: plan.title, status: "planned",
           message: "تم إنشاء خطة المشروع وحفظها في قاعدة البيانات السحابية. لم يبدأ التنفيذ الآلي للملفات بعد.",
@@ -105,7 +108,7 @@ export default {
 
       if (url.pathname === "/api/projects" && request.method === "GET") {
         const { results } = await env.DB.prepare(
-          "SELECT id,title,brief,status,created_at FROM projects ORDER BY created_at DESC LIMIT 50"
+          "SELECT id,title,description,status,created_at FROM projects ORDER BY created_at DESC LIMIT 50"
         ).all();
         return json(results || [], 200, origin);
       }
