@@ -7,8 +7,8 @@ binding = "AI"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ali-ai-company"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_name = "ali-ai-company-db"
+database_id = "3f3e09f5-c50e-449e-abb5-9c25e56c1586"
 
 [vars]
 ALLOWED_ORIGIN = "https://harhor1e-lang.github.io"
