@@ -34,6 +34,28 @@ async function sha256(value) {
 async function readJson(request) {
   try { return await request.json(); } catch { return null; }
 }
+function extractModelText(result) {
+  const candidates = [
+    result?.response,
+    result?.output_text,
+    result?.choices?.[0]?.message?.content,
+    result?.choices?.[0]?.text,
+    result?.result?.response,
+    result?.result?.choices?.[0]?.message?.content
+  ];
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+    if (Array.isArray(candidate)) {
+      const text = candidate.map(part =>
+        typeof part === "string" ? part :
+        typeof part?.text === "string" ? part.text :
+        typeof part?.content === "string" ? part.content : ""
+      ).join("").trim();
+      if (text) return text;
+    }
+  }
+  return "";
+}
 function frontendUrl(env) {
   const value = env.FRONTEND_URL || "https://harhor1e-lang.github.io/ai-office/";
   const url = new URL(value);
@@ -266,7 +288,7 @@ Create 3 to 8 sequential tasks. Each task must have a concrete deliverable and c
     max_tokens: 2200,
     temperature: 0.2
   });
-  const raw = result?.response || result?.output_text || "";
+  const raw = extractModelText(result);
   const cleaned = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
   let plan;
   try { plan = JSON.parse(cleaned); }
@@ -306,7 +328,7 @@ async function handleChat(request, env, origin, user) {
     ...(history.results || []).reverse().map(item => ({ role: item.role, content: item.content }))
   ];
   const result = await env.AI.run(MODEL, { messages, max_tokens: 1600, temperature: 0.35 });
-  const reply = String(result?.response || result?.output_text || "").trim();
+  const reply = extractModelText(result);
   if (!reply) throw new Error("لم يصل رد من المساعد. حاول مرة أخرى.");
   const replyTime = new Date().toISOString();
   await env.DB.prepare(
