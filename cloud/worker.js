@@ -311,10 +311,19 @@ export default {
             return new Response("Too many sign-in attempts. Please wait and try again.", { status: 429, headers: { "Cache-Control": "no-store" } });
           return await beginOAuth(request, env, provider);
         }
-        if (action === "callback" && request.method === "GET") return await finishOAuth(request, env, provider);
+        if (action === "callback" && request.method === "GET") {
+          if (!await rateLimit(env, clientRateKey(request, "oauth-callback-" + provider), 20))
+            return new Response("Too many sign-in attempts. Please wait and try again.", {
+              status: 429, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+            });
+          return await finishOAuth(request, env, provider);
+        }
         return new Response("Method not allowed", { status: 405 });
-      } catch (error) {
-        return new Response("Sign-in failed: " + (error?.message || "unknown error"), { status: 400 });
+      } catch {
+        return new Response("Sign-in could not be completed. Please try again.", {
+          status: 400,
+          headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+        });
       }
     }
 
@@ -362,6 +371,8 @@ export default {
         return json(results || [], 200, origin);
       }
       if (url.pathname === "/api/conversations" && request.method === "POST") {
+        if (!await rateLimit(env, "conversation-create:" + user.id, 10))
+          return json({ error: "إنشاء المحادثات بسرعة كبيرة. انتظر دقيقة ثم حاول." }, 429, origin);
         const body = await readJson(request);
         const title = String(body?.title || "محادثة جديدة").trim().slice(0, 120) || "محادثة جديدة";
         const id = crypto.randomUUID(), now = new Date().toISOString();
@@ -441,8 +452,8 @@ export default {
         return json({ ok: true, id: updateMatch[1], status: body.status }, 200, origin);
       }
       return json({ error: "المسار غير موجود." }, 404, origin);
-    } catch (error) {
-      return json({ error: error?.message || "حدث خطأ في محرك الشركة." }, 500, origin);
+    } catch {
+      return json({ error: "حدث خطأ مؤقت في محرك الشركة. حاول مرة أخرى بعد قليل." }, 500, origin);
     }
   }
 };
