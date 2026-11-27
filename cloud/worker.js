@@ -407,16 +407,18 @@ export default {
           return json({ error: "اكتب وصفاً من 8 إلى 5000 حرف." }, 400, origin);
         const plan = await makePlan(env, brief);
         const projectId = crypto.randomUUID(), now = new Date().toISOString();
-        await env.DB.prepare(
-          "INSERT INTO projects (id,user_id,title,description,status,created_at) VALUES(?,?,?,?,?,?)"
-        ).bind(projectId, user.id, plan.title, brief, "planned", now).run();
-        const statements = plan.tasks.map(task => env.DB.prepare(
-          "INSERT INTO tasks (id,project_id,user_id,title,department,description,status,created_at) VALUES(?,?,?,?,?,?,?,?)"
-        ).bind(crypto.randomUUID(), projectId, user.id, task.title, task.department, task.description, "pending", now));
-        if (statements.length) await env.DB.batch(statements);
-        await env.DB.prepare(
-          "INSERT INTO activity_log (id,project_id,actor,action,details,created_at) VALUES(?,?,?,?,?,?)"
-        ).bind(crypto.randomUUID(), projectId, user.display_name, "إنشاء مشروع", `تم حفظ المشروع: ${plan.title} — ${plan.tasks.length} مهام`, now).run();
+        const statements = [
+          env.DB.prepare(
+            "INSERT INTO projects (id,user_id,title,description,status,created_at) VALUES(?,?,?,?,?,?)"
+          ).bind(projectId, user.id, plan.title, brief, "planned", now),
+          ...plan.tasks.map(task => env.DB.prepare(
+            "INSERT INTO tasks (id,project_id,user_id,title,department,description,status,created_at) VALUES(?,?,?,?,?,?,?,?)"
+          ).bind(crypto.randomUUID(), projectId, user.id, task.title, task.department, task.description, "pending", now)),
+          env.DB.prepare(
+            "INSERT INTO activity_log (id,project_id,actor,action,details,created_at) VALUES(?,?,?,?,?,?)"
+          ).bind(crypto.randomUUID(), projectId, user.display_name, "إنشاء مشروع", `تم حفظ المشروع: ${plan.title} — ${plan.tasks.length} مهام`, now)
+        ];
+        await env.DB.batch(statements);
         return json({
           project_id: projectId, title: plan.title, status: "planned",
           message: "تم إنشاء خطة المشروع وحفظها في حسابك. لم يبدأ التنفيذ الآلي للملفات بعد.",
