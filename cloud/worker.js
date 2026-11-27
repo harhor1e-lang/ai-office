@@ -94,7 +94,9 @@ async function exchangeProviderCode(request, env, provider, code) {
       })
     });
     const token = await tokenResponse.json();
-    if (!tokenResponse.ok || !token.access_token) throw new Error("Google sign-in could not be completed.");
+    if (!tokenResponse.ok || !token.access_token) {
+      throw new Error("Google token exchange failed: " + String(token.error || tokenResponse.status));
+    }
     const profileResponse = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
       headers: { authorization: "Bearer " + token.access_token }
     });
@@ -120,7 +122,9 @@ async function exchangeProviderCode(request, env, provider, code) {
     })
   });
   const token = await tokenResponse.json();
-  if (!tokenResponse.ok || !token.access_token) throw new Error("GitHub sign-in could not be completed.");
+  if (!tokenResponse.ok || !token.access_token) {
+    throw new Error("GitHub token exchange failed: " + String(token.error || tokenResponse.status));
+  }
   const headers = {
     authorization: "Bearer " + token.access_token,
     accept: "application/vnd.github+json",
@@ -149,6 +153,13 @@ async function finishOAuth(request, env, provider) {
   const code = url.searchParams.get("code") || "";
   const browserState = readCookie(request, "oauth_state_" + provider);
   if (!state || !browserState || state !== browserState || !code) {
+    console.warn("OAuth state validation failed", {
+      provider,
+      hasState: Boolean(state),
+      hasBrowserCookie: Boolean(browserState),
+      stateMatches: Boolean(state && browserState && state === browserState),
+      hasCode: Boolean(code)
+    });
     return new Response("Invalid or expired sign-in request. Please try again.", {
       status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
     });
@@ -157,6 +168,7 @@ async function finishOAuth(request, env, provider) {
     "DELETE FROM oauth_states WHERE state=? AND provider=? AND expires_at>? RETURNING state"
   ).bind(state, provider, new Date().toISOString()).first();
   if (!stateRow) {
+    console.warn("OAuth state record missing or expired", { provider });
     return new Response("Invalid or expired sign-in request. Please try again.", {
       status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
     });
