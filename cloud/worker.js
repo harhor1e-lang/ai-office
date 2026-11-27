@@ -479,7 +479,14 @@ export default {
         return json({ ok: true, id: updateMatch[1], status: body.status }, 200, origin);
       }
       return json({ error: "المسار غير موجود." }, 404, origin);
-    } catch {
+    } catch (error) {
+      // Safe runtime diagnostic: never log request bodies, authorization headers, tokens, or secrets.
+      console.error("API request failed", {
+        path: url.pathname,
+        method: request.method,
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        errorMessage: (error instanceof Error ? error.message : "Unknown runtime error").slice(0, 500)
+      });
       return json({ error: "حدث خطأ مؤقت في محرك الشركة. حاول مرة أخرى بعد قليل." }, 500, origin);
     }
   }
