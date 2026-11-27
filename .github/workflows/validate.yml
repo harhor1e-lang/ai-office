@@ -1,0 +1,84 @@
+name: Validate ALI AI COMPANY
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [public-user-accounts]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check Worker JavaScript syntax
+        run: node --check cloud/worker.js
+
+      - name: Check browser JavaScript syntax
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          class Scripts(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.active = False
+                  self.external = False
+                  self.parts = []
+                  self.current = []
+
+              def handle_starttag(self, tag, attrs):
+                  if tag.lower() == "script":
+                      self.active = True
+                      self.external = any(k.lower() == "src" for k, _ in attrs)
+                      self.current = []
+
+              def handle_data(self, data):
+                  if self.active and not self.external:
+                      self.current.append(data)
+
+              def handle_endtag(self, tag):
+                  if tag.lower() == "script" and self.active:
+                      if not self.external:
+                          self.parts.append("".join(self.current))
+                      self.active = False
+                      self.external = False
+
+          parser = Scripts()
+          parser.feed(Path("index.html").read_text(encoding="utf-8"))
+          Path("/tmp/ali-ai-browser.js").write_text("\n;\n".join(parser.parts), encoding="utf-8")
+          if not parser.parts:
+              raise SystemExit("No inline browser scripts found")
+          PY
+          node --check /tmp/ali-ai-browser.js
+
+      - name: Validate D1 migrations against the existing schema
+        run: |
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+
+          db = sqlite3.connect(":memory:")
+          db.executescript(Path("cloud/schema.sql").read_text(encoding="utf-8"))
+          for migration in sorted(Path("cloud/migrations").glob("*.sql")):
+              db.executescript(migration.read_text(encoding="utf-8"))
+          tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+          required = {"users", "oauth_identities", "user_sessions", "oauth_states",
+                      "auth_codes", "conversations", "messages", "rate_limits"}
+          missing = required - tables
+          if missing:
+              raise SystemExit(f"Missing tables after migrations: {sorted(missing)}")
+          columns = {row[1] for row in db.execute("PRAGMA table_info(projects)")}
+          if "user_id" not in columns:
+              raise SystemExit("projects.user_id migration missing")
+          print("D1 schema and migrations validated.")
+          PY
