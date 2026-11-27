@@ -306,7 +306,11 @@ export default {
     if (providerMatch) {
       const [, provider, action] = providerMatch;
       try {
-        if (action === "start" && request.method === "GET") return await beginOAuth(request, env, provider);
+        if (action === "start" && request.method === "GET") {
+          if (!await rateLimit(env, clientRateKey(request, "oauth-start-" + provider), 10))
+            return new Response("Too many sign-in attempts. Please wait and try again.", { status: 429, headers: { "Cache-Control": "no-store" } });
+          return await beginOAuth(request, env, provider);
+        }
         if (action === "callback" && request.method === "GET") return await finishOAuth(request, env, provider);
         return new Response("Method not allowed", { status: 405 });
       } catch (error) {
