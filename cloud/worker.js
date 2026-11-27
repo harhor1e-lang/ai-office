@@ -223,6 +223,22 @@ async function currentUser(request, env) {
     "SELECT u.id,u.display_name,u.email,u.avatar_url FROM user_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?"
   ).bind(await sha256(token), new Date().toISOString()).first();
 }
+async function rateLimit(env, key, limit, windowSeconds = 60) {
+  const now = Math.floor(Date.now() / 1000);
+  const windowStart = Math.floor(now / windowSeconds) * windowSeconds;
+  const keyHash = await sha256(String(key));
+  const row = await env.DB.prepare(
+    "INSERT INTO rate_limits (key_hash,window_start,hit_count) VALUES(?,?,1) " +
+    "ON CONFLICT(key_hash) DO UPDATE SET " +
+    "hit_count=CASE WHEN rate_limits.window_start=? THEN rate_limits.hit_count+1 ELSE 1 END, " +
+    "window_start=? RETURNING hit_count"
+  ).bind(keyHash, windowStart, windowStart, windowStart).first();
+  return Number(row?.hit_count || 0) <= limit;
+}
+function clientRateKey(request, scope) {
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  return scope + ":" + ip;
+}
 async function makePlan(env, brief) {
   const system = `You are the project director of ALI AI COMPANY. Turn the user's request into a realistic, ordered project plan. Return ONLY valid JSON, no markdown, with this exact shape:
 {"title":"short project title","tasks":[{"title":"short task title","department":"department","description":"specific work and verifiable acceptance criteria"}]}
@@ -316,8 +332,11 @@ export default {
     if (!origin) return json({ error: "Origin not allowed" }, 403, "null");
 
     try {
-      if (url.pathname === "/api/auth/exchange" && request.method === "POST")
+      if (url.pathname === "/api/auth/exchange" && request.method === "POST") {
+        if (!await rateLimit(env, clientRateKey(request, "auth-exchange"), 10))
+          return json({ error: "محاولات تسجيل الدخول كثيرة. انتظر دقيقة ثم حاول مجدداً." }, 429, origin);
         return await exchangeLoginCode(request, env, origin);
+      }
 
       const user = await currentUser(request, env);
       if (url.pathname === "/api/auth/me" && request.method === "GET") {
@@ -358,10 +377,15 @@ export default {
         if (!owns) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
         return json(results || [], 200, origin);
       }
-      if (url.pathname === "/api/chat" && request.method === "POST")
+      if (url.pathname === "/api/chat" && request.method === "POST") {
+        if (!await rateLimit(env, "chat:" + user.id, 20))
+          return json({ error: "وصلت إلى حد الرسائل المؤقت. انتظر دقيقة ثم حاول." }, 429, origin);
         return await handleChat(request, env, origin, user);
+      }
 
       if (url.pathname === "/api/projects/plan" && request.method === "POST") {
+        if (!await rateLimit(env, "project-plan:" + user.id, 5))
+          return json({ error: "طلبات إنشاء المشاريع كثيرة. انتظر دقيقة ثم حاول." }, 429, origin);
         const body = await readJson(request);
         const brief = String(body?.brief || "").trim();
         if (brief.length < 8 || brief.length > 5000)
