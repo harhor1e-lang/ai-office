@@ -75,9 +75,14 @@ async function beginOAuth(request, env, provider) {
   } else {
     auth.searchParams.set("scope", "read:user user:email");
   }
-  const response = Response.redirect(auth.toString(), 302);
-  response.headers.append("Set-Cookie", "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/auth/" + provider + "; Max-Age=600; HttpOnly; Secure; SameSite=Lax");
-  return response;
+  return new Response(null, {
+    status: 302,
+    headers: {
+      "Location": auth.toString(),
+      "Set-Cookie": "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/auth/" + provider + "; Max-Age=600; HttpOnly; Secure; SameSite=Lax",
+      "Cache-Control": "no-store"
+    }
+  });
 }
 async function exchangeProviderCode(request, env, provider, code) {
   const redirectUri = callbackUrl(request, provider);
@@ -201,10 +206,14 @@ async function finishOAuth(request, env, provider) {
   ).bind(await sha256(oneTimeCode), userId, new Date(Date.now() + 2 * 60 * 1000).toISOString(), now).run();
   const destination = frontendUrl(env);
   destination.searchParams.set("auth_code", oneTimeCode);
-  const response = Response.redirect(destination.toString(), 302);
-  response.headers.append("Set-Cookie", clearOAuthCookie(provider));
-  response.headers.set("Cache-Control", "no-store");
-  return response;
+  return new Response(null, {
+    status: 302,
+    headers: {
+      "Location": destination.toString(),
+      "Set-Cookie": clearOAuthCookie(provider),
+      "Cache-Control": "no-store"
+    }
+  });
 }
 async function exchangeLoginCode(request, env, origin) {
   const body = await readJson(request);
