@@ -309,9 +309,10 @@ async function handleChat(request, env, origin, user) {
   if (content.length < 1 || content.length > 6000)
     return json({ error: "اكتب رسالة من 1 إلى 6000 حرف." }, 400, origin);
   const conversation = await env.DB.prepare(
-    "SELECT id FROM conversations WHERE id=? AND user_id=?"
+    "SELECT id,locked FROM conversations WHERE id=? AND user_id=?"
   ).bind(conversationId, user.id).first();
   if (!conversation) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
+  if (conversation.locked) return json({ error: "هذه المحادثة مقفلة. ألغِ القفل أولاً." }, 423, origin);
 
   const now = new Date().toISOString();
   await env.DB.prepare(
