@@ -39,7 +39,26 @@ box(50,250,1295,30,'#566b7a','#a2b0ba',1);txt('الممر الرئيسي الع�
 rooms.forEach(room);rooms.forEach((r,k)=>{for(let j=0;j<10;j++){let d=desks[k*10+j];desk(d.x,d.y);txt('مكتب '+(k*10+j+1),d.x,d.y-34,9,'#f0d39a')}});
 box(50,885,1295,170,'#203747','#758b9d',3);txt('الخدمات والطباعة والاستراحة',700,915,15);box(120,950,225,65,'#465d6b','#9aabb6',2);txt('الطابعة المركزية',232,988,13);box(520,950,260,65,'#465d6b','#9aabb6',2);txt('منطقة الاستراحة',650,988,13);box(1035,950,225,65,'#465d6b','#9aabb6',2);txt('أرشيف الملفات',1147,988,13)
 }
-function person(a){let x=a.x,y=a.y+Math.sin(a.phase*5)*1.5;c.fillStyle='#0007';c.beginPath();c.ellipse(x,y+14,13,5,0,0,Math.PI*2);c.fill();c.strokeStyle='#182333';c.lineWidth=5;c.lineCap='round';c.beginPath();c.moveTo(x-4,y+6);c.lineTo(x-6,y+14);c.moveTo(x+4,y+6);c.lineTo(x+6,y+14);c.stroke();let colors=['#b77d5f','#628db1','#927ba9','#6c9b86','#bd985b'];c.fillStyle=colors[a.id%5];c.fillRect(x-8,y-5,16,18);c.strokeStyle=colors[a.id%5];c.lineWidth=4;c.beginPath();c.moveTo(x-7,y);c.lineTo(x-12,y+6);c.moveTo(x+7,y);c.lineTo(x+12,y+6);c.stroke();c.fillStyle='#d7a47e';c.beginPath();c.arc(x,y-12,8,0,Math.PI*2);c.fill();c.fillStyle=['#30251f','#45362b','#202b36'][a.id%3];c.beginPath();c.arc(x,y-15,7,Math.PI,Math.PI*2);c.fill();if(a.state==='على مكتبه'){c.fillStyle='#8de0b7';c.beginPath();c.arc(x+12,y-17,3,0,Math.PI*2);c.fill()}c.fillStyle='#f3f5f7';c.font='10px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(a.name,x,y+30);if(a.id===selected){c.strokeStyle='#f2cb73';c.lineWidth=2;c.beginPath();c.ellipse(x,y+2,18,28,0,0,Math.PI*2);c.stroke()}}
+function person(a){
+ const x=a.x,y=a.y+Math.sin(a.phase*5)*1.2,shirt=['#b77d5f','#628db1','#927ba9','#6c9b86','#bd985b'][a.id%5],hair=['#30251f','#45362b','#202b36'][a.id%3];
+ c.save();
+ c.fillStyle='#0008';c.beginPath();c.ellipse(x,y+17,15,5,0,0,Math.PI*2);c.fill();
+ c.lineCap='round';c.lineJoin='round';
+ c.strokeStyle='#29384a';c.lineWidth=5;c.beginPath();c.moveTo(x-4,y+10);c.lineTo(x-6,y+19);c.moveTo(x+4,y+10);c.lineTo(x+6,y+19);c.stroke();
+ c.fillStyle='#29384a';c.fillRect(x-9,y+18,7,3);c.fillRect(x+3,y+18,7,3);
+ c.strokeStyle=shirt;c.lineWidth=5;c.beginPath();c.moveTo(x-7,y-1);c.lineTo(x-13,y+8);c.moveTo(x+7,y-1);c.lineTo(x+13,y+8);c.stroke();
+ c.fillStyle=shirt;c.beginPath();c.moveTo(x-7,y-6);c.quadraticCurveTo(x,y-10,x+7,y-6);c.lineTo(x+8,y+11);c.quadraticCurveTo(x,y+15,x-8,y+11);c.closePath();c.fill();
+ c.fillStyle='#e6c58e';c.beginPath();c.moveTo(x-3,y-6);c.lineTo(x,y-1);c.lineTo(x+3,y-6);c.fill();
+ c.fillStyle='#d7a47e';c.fillRect(x-2,y-12,4,7);c.beginPath();c.ellipse(x,y-17,8,9,0,0,Math.PI*2);c.fill();
+ c.fillStyle=hair;c.beginPath();c.arc(x,y-19,8,Math.PI,Math.PI*2);c.quadraticCurveTo(x+7,y-18,x+6,y-15);c.quadraticCurveTo(x,y-18,x-7,y-14);c.closePath();c.fill();
+ c.fillStyle='#35251e';c.beginPath();c.arc(x-3,y-16,1,0,Math.PI*2);c.arc(x+3,y-16,1,0,Math.PI*2);c.fill();
+ c.strokeStyle='#8c5e49';c.lineWidth=1;c.beginPath();c.arc(x,y-13,2,0.2,Math.PI-.2);c.stroke();
+ c.fillStyle='#f0d89d';c.fillRect(x+3,y+1,3,5);
+ if(a.state==='على مكتبه'){c.fillStyle='#8de0b7';c.beginPath();c.arc(x+13,y-25,3,0,Math.PI*2);c.fill()}
+ c.fillStyle='#f3f5f7';c.font='10px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(a.name,x,y+34);
+ if(a.id===selected){c.strokeStyle='#f2cb73';c.lineWidth=2;c.beginPath();c.ellipse(x,y+1,19,31,0,0,Math.PI*2);c.stroke()}
+ c.restore();
+}
 function render(){building();agents.forEach(person);c.fillStyle='#e6ca8d';c.beginPath();c.arc(manager.x,manager.y,10,0,Math.PI*2);c.fill();c.fillStyle='#172333';c.fillRect(manager.x-8,manager.y+8,16,17);txt('المدير',manager.x,manager.y+42,11,'#f2d99e');txt('كاميرا السقف',1290,880,10,'#d9e4ec')}
 function route(a,dest){let k=desks[a.id].room,door=[255,700,1145][k];let p;if(dest==='manager')p=[[door,800],[700,835],[700,265],[207,265],[207,185]];else if(dest==='meeting')p=[[door,800],[700,835],[700,265],[592,265],[592,205]];else if(dest==='printer')p=[[door,800],[700,835],[700,875],[232,875],[232,935]];else p=[[door,800],[700,835],[700,265],[door,265],[a.home.x,a.home.y]];a.path=p;a.dest=dest;a.state=dest==='manager'?'عند المدير':dest==='meeting'?'في الاجتماع':dest==='printer'?'عند الطابعة':'راجع لمكتبه';a.task=dest==='manager'?'مراجعة العمل مع المدير':dest==='meeting'?'مناقشة مع الفريق':dest==='printer'?'طباعة مستندات':'العودة إلى مكتبه'}
 function move(a,dt){if(!a.path.length)return;let p=a.path[0],dx=p[0]-a.x,dy=p[1]-a.y,d=Math.hypot(dx,dy),s=105*dt;if(d<s){a.x=p[0];a.y=p[1];a.path.shift()}else{a.x+=dx/d*s;a.y+=dy/d*s}a.phase+=dt*4;if(!a.path.length){if(a.dest==='return'){a.state='على مكتبه';a.task='يعمل على الحاسوب';a.dest=null}else a.wait=3}}
