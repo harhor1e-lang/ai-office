@@ -17,6 +17,14 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Apply database migrations
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cloud
+          command: d1 migrations apply ali-ai-company-db --remote
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
