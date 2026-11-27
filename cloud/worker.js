@@ -55,12 +55,15 @@ function clearOAuthCookie(provider) {
 async function beginOAuth(request, env, provider) {
   const clientId = provider === "google" ? env.GOOGLE_CLIENT_ID : env.GITHUB_CLIENT_ID;
   if (!clientId) return new Response("OAuth provider is not configured yet.", { status: 503 });
+  const codeChallenge = new URL(request.url).searchParams.get("code_challenge") || "";
+  if (!/^[a-f0-9]{64}$/.test(codeChallenge))
+    return new Response("Invalid sign-in challenge. Please return to the website and try again.", { status: 400, headers: { "Cache-Control": "no-store" } });
   const state = randomToken();
   const now = new Date();
   const expires = new Date(now.getTime() + 10 * 60 * 1000).toISOString();
   await env.DB.prepare(
-    "INSERT INTO oauth_states (state,provider,created_at,expires_at) VALUES(?,?,?,?)"
-  ).bind(state, provider, now.toISOString(), expires).run();
+    "INSERT INTO oauth_states (state,provider,created_at,expires_at,verifier_hash) VALUES(?,?,?,?,?)"
+  ).bind(state, provider, now.toISOString(), expires, codeChallenge).run();
 
   const auth = provider === "google"
     ? new URL("https://accounts.google.com/o/oauth2/v2/auth")
@@ -79,7 +82,6 @@ async function beginOAuth(request, env, provider) {
     status: 302,
     headers: {
       "Location": auth.toString(),
-      "Set-Cookie": "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/; Max-Age=600; HttpOnly; Secure; SameSite=None",
       "Cache-Control": "no-store"
     }
   });
@@ -156,26 +158,19 @@ async function finishOAuth(request, env, provider) {
   const url = new URL(request.url);
   const state = url.searchParams.get("state") || "";
   const code = url.searchParams.get("code") || "";
-  const browserState = readCookie(request, "oauth_state_" + provider);
-  if (!state || !browserState || state !== browserState || !code) {
-    console.warn("OAuth state validation failed", {
-      provider,
-      hasState: Boolean(state),
-      hasBrowserCookie: Boolean(browserState),
-      stateMatches: Boolean(state && browserState && state === browserState),
-      hasCode: Boolean(code)
-    });
+  if (!state || !code) {
+    console.warn("OAuth state validation failed", { provider, hasState: Boolean(state), hasCode: Boolean(code) });
     return new Response("Invalid or expired sign-in request. Please try again.", {
-      status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+      status: 400, headers: { "Cache-Control": "no-store" }
     });
   }
   const stateRow = await env.DB.prepare(
-    "DELETE FROM oauth_states WHERE state=? AND provider=? AND expires_at>? RETURNING state"
+    "DELETE FROM oauth_states WHERE state=? AND provider=? AND expires_at>? RETURNING state,verifier_hash"
   ).bind(state, provider, new Date().toISOString()).first();
   if (!stateRow) {
     console.warn("OAuth state record missing or expired", { provider });
     return new Response("Invalid or expired sign-in request. Please try again.", {
-      status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+      status: 400, headers: { "Cache-Control": "no-store" }
     });
   }
 
@@ -202,15 +197,14 @@ async function finishOAuth(request, env, provider) {
 
   const oneTimeCode = randomToken();
   await env.DB.prepare(
-    "INSERT INTO auth_codes (code_hash,user_id,expires_at,created_at) VALUES(?,?,?,?)"
-  ).bind(await sha256(oneTimeCode), userId, new Date(Date.now() + 2 * 60 * 1000).toISOString(), now).run();
+    "INSERT INTO auth_codes (code_hash,user_id,expires_at,created_at,verifier_hash) VALUES(?,?,?,?,?)"
+  ).bind(await sha256(oneTimeCode), userId, new Date(Date.now() + 2 * 60 * 1000).toISOString(), now, stateRow.verifier_hash).run();
   const destination = frontendUrl(env);
   destination.searchParams.set("auth_code", oneTimeCode);
   return new Response(null, {
     status: 302,
     headers: {
       "Location": destination.toString(),
-      "Set-Cookie": clearOAuthCookie(provider),
       "Cache-Control": "no-store"
     }
   });
@@ -218,13 +212,16 @@ async function finishOAuth(request, env, provider) {
 async function exchangeLoginCode(request, env, origin) {
   const body = await readJson(request);
   const code = String(body?.code || "");
-  if (code.length < 30 || code.length > 200) return json({ error: "رمز تسجيل الدخول غير صالح." }, 400, origin);
+  const verifier = String(body?.verifier || "");
+  if (code.length < 30 || code.length > 200 || verifier.length < 40 || verifier.length > 200)
+    return json({ error: "بيانات إكمال تسجيل الدخول غير صالحة. حاول تسجيل الدخول مجدداً." }, 400, origin);
   const hash = await sha256(code);
+  const verifierHash = await sha256(verifier);
   const now = new Date().toISOString();
   const row = await env.DB.prepare(
-    "DELETE FROM auth_codes WHERE code_hash=? AND expires_at>? RETURNING user_id"
-  ).bind(hash, now).first();
-  if (!row) return json({ error: "انتهت صلاحية تسجيل الدخول. حاول مرة أخرى." }, 401, origin);
+    "DELETE FROM auth_codes WHERE code_hash=? AND verifier_hash=? AND expires_at>? RETURNING user_id"
+  ).bind(hash, verifierHash, now).first();
+  if (!row) return json({ error: "تعذر التحقق من جلسة تسجيل الدخول. ابدأ تسجيل الدخول من جديد." }, 401, origin);
 
   const sessionToken = randomToken();
   const expires = new Date(Date.now() + SESSION_DAYS * 86400000).toISOString();
