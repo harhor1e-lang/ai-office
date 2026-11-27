@@ -225,16 +225,40 @@ async function initializeAccount() {
     showSignedOut();
   }
 }
+function bytesToHex(bytes) {
+  return Array.from(new Uint8Array(bytes), value => value.toString(16).padStart(2, "0")).join("");
+}
+async function startOAuth(provider) {
+  const random = crypto.getRandomValues(new Uint8Array(32));
+  let binary = "";
+  random.forEach(value => binary += String.fromCharCode(value));
+  const verifier = btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+  const challenge = bytesToHex(digest);
+  sessionStorage.setItem("aliOAuthVerifier", verifier);
+  location.href = API_BASE + "/auth/" + provider + "/start?code_challenge=" + challenge;
+}
+document.getElementById("googleLogin").addEventListener("click", event => {
+  event.preventDefault();
+  startOAuth("google").catch(() => showSignedOut("تعذر بدء تسجيل الدخول. حاول مرة أخرى."));
+});
+document.getElementById("githubLogin").addEventListener("click", event => {
+  event.preventDefault();
+  startOAuth("github").catch(() => showSignedOut("تعذر بدء تسجيل الدخول. حاول مرة أخرى."));
+});
 async function completeOAuthIfPresent() {
   const params = new URLSearchParams(location.search);
   const code = params.get("auth_code");
   if (!code) return;
+  const verifier = sessionStorage.getItem("aliOAuthVerifier") || "";
+  sessionStorage.removeItem("aliOAuthVerifier");
   document.getElementById("authStatus").textContent = "● جارٍ إكمال تسجيل الدخول";
   try {
+    if (!verifier) throw new Error("انتهت جلسة المتصفح. ابدأ تسجيل الدخول من جديد.");
     const response = await fetch(API_BASE + "/api/auth/exchange", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code })
+      body: JSON.stringify({ code, verifier })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "تعذر إكمال تسجيل الدخول.");
