@@ -30,7 +30,7 @@
 <header><div class="brand"><div class="mark">A</div><div><h1>ALI AI COMPANY</h1><small>ONE VISION · MANY AI AGENTS</small></div></div><div class="account-head"><span id="authStatus" class="live">● منصة الذكاء الاصطناعي</span><button id="headerLogin" class="primary" type="button">تسجيل الدخول</button><button id="headerLogout" type="button" style="display:none">تسجيل الخروج</button></div></header>
 <main><section class="intro"><div><h2>مساحة العمل الذكية</h2><p>كل أدواتك ومحادثاتك ومشاريعك في مكان واحد.</p></div><div class="stats"><div class="stat"><b id="staffCount">30</b><span>موظفاً افتراضياً</span></div><div class="stat"><b id="atdesks">30</b><span>على مكاتبهم</span></div><div class="stat"><b id="done">0</b><span>أنشطة المحاكاة</span></div></div></section>
 <nav class="tabs" aria-label="أقسام الشركة"><button class="active" data-tab="assistantTab">المساعد الذكي</button><button data-tab="conversationsTab">محادثاتي</button><button data-tab="requests">مشاريعي</button><button data-tab="buildingTab">مبنى الشركة</button><button data-tab="employeesTab">الموظفون</button><button data-tab="companyTab">عن الشركة</button></nav><section class="tabview active" id="assistantTab"><div class="assistant-layout"><section class="panel chat-panel"><div class="panelhead"><b>مساعد ALI AI</b><span>ALI AI ASSISTANT</span></div><div id="chatGate" class="chat-gate"><h3>أهلاً بك في ALI AI</h3><p>سجّل الدخول وابدأ مساحة عملك الخاصة.</p><div class="login-actions"><a id="googleLogin" class="login-link" href="https://ali-ai-company-cloud.omf09947.workers.dev/auth/google/start">المتابعة باستخدام Google</a><a id="githubLogin" class="login-link" href="https://ali-ai-company-cloud.omf09947.workers.dev/auth/github/start">المتابعة باستخدام GitHub</a></div></div><div id="accountArea" style="display:none"><div class="chat-toolbar"><div class="chat-toolbar-actions"><button id="newConversation" class="icon-action" title="محادثة جديدة" aria-label="محادثة جديدة">✎</button><div class="chat-menu-wrap"><button id="conversationMenuToggle" class="icon-action" aria-label="خيارات المحادثة">⋯</button><div id="conversationMenu" class="conversation-menu" hidden><button data-action="share">مشاركة</button><button data-action="pin">تثبيت / إلغاء التثبيت</button><button data-action="lock">قفل / فتح المحادثة</button><button data-action="add">إضافة إلى مشاريعي</button><button data-action="files">الملفات المرفوعة</button><button data-action="search">بحث في الدردشة</button><button data-action="install">إضافة إلى الشاشة الرئيسية</button><button data-action="archive">أرشفة / استعادة</button><button data-action="delete" class="danger-action">حذف المحادثة</button></div></div><div class="chat-current-title"><strong id="currentConversationTitle">محادثة جديدة</strong><span id="userInfo" class="user-info"></span></div></div></div><div class="chat-workspace"><aside class="conversation-sidebar"><div class="sidebar-heading">محادثاتك</div><div id="conversationList" class="conversation-list"></div></aside><div class="chat-main"><div id="chatMessages" class="chat-messages"><div class="welcome-chat"><div class="welcome-mark">A</div><h2>بماذا تفكر اليوم؟</h2><p>ابدأ محادثة جديدة، وسأساعدك في تحويل أفكارك إلى خطوات واضحة.</p></div></div><div class="chat-compose"><textarea id="chatInput" rows="2" maxlength="6000" placeholder="اكتب سؤالك أو العمل الذي تريد المساعدة به..."></textarea><button class="primary" id="sendChat" type="button">إرسال</button></div><div id="chatNotice" class="note">تُحفظ رسائلك تلقائياً ضمن حسابك.</div></div></div></div></section><aside class="side"><section class="panel" style="padding:17px"><h3>مساحة عملك</h3><p class="detail">محادثاتك ومشاريعك محفوظة ضمن حسابك.</p></section><section class="panel" style="padding:17px"><h3>ALI AI COMPANY</h3><p class="detail">منصة واحدة لأفكارك وأعمالك.</p></section></aside></div></section>
-<section class="tabview" id="conversationsTab"><section class="panel"><div class="panelhead"><b>محادثاتي</b><span>محادثاتك المحفوظة في حسابك</span></div><div class="conversation-library"><div class="conversation-library-intro">اختر محادثة لفتحها ومتابعة الحديث من حيث توقفت.</div><div id="conversationList" class="conversation-library-list"><div class="note">سجّل الدخول لعرض محادثاتك.</div></div></div></section></section>
+<section class="tabview" id="conversationsTab"><section class="panel"><div class="panelhead"><b>محادثاتي</b><span>محادثاتك المحفوظة في حسابك</span></div><div class="conversation-library"><div class="conversation-library-intro">اختر محادثة لفتحها ومتابعة الحديث من حيث توقفت.</div><div id="conversationArchiveList" class="conversation-library-list"><div class="note">سجّل الدخول لعرض محادثاتك.</div></div></div></section></section>
 <section class="tabview" id="buildingTab"><div class="layout"><section class="panel"><div class="panelhead"><b>مقر ALI AI COMPANY</b><span>HEADQUARTERS</span></div><div class="viewport"><canvas id="scene" width="1400" height="1100"></canvas></div><div class="controls"><button class="primary" id="start">▶ تشغيل يوم العمل</button><button id="pause">إيقاف مؤقت</button><button id="call">استدعاء المحدد للمدير</button><button id="meet">اجتماع جماعي</button><button id="return">عودة للمكاتب</button></div></section>
 <aside class="side"><section class="panel"><h3>حركة المقر</h3><div class="log" id="log"><div>تم فتح كاميرا السقف الافتراضية.<time>الآن</time></div></div></section></aside></div></section>
 <section class="tabview" id="requests"><section class="panel"><div class="panelhead"><b>مشاريعي المحفوظة</b><span>خاصة بحسابك فقط</span></div><div style="padding:15px"><div id="projectCreator" style="display:none;margin-bottom:16px"><label for="projectBrief" style="display:block;color:var(--gold);font-size:12px;margin-bottom:8px">إنشاء مشروع جديد</label><textarea id="projectBrief" rows="3" maxlength="5000" placeholder="اكتب فكرة المشروع والنتيجة التي تريد الوصول إليها..." style="width:100%;resize:vertical;min-height:86px;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:9px;padding:12px;font:12px Tahoma"></textarea><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:9px"><button class="primary" id="createProject" type="button">إنشاء خطة المشروع</button><span id="projectNotice" class="note" aria-live="polite"></span></div></div><div id="taskBoard" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="note">سجّل الدخول لعرض مشاريعك المحفوظة.</div></div><button id="refreshProjects" style="margin-top:14px">تحديث المشاريع</button><p class="note">تُحفظ المشاريع في حسابك السحابي، ولا تظهر للمستخدمين الآخرين.</p></div></section></section>
@@ -131,25 +131,19 @@ function appendChatMessage(role, content) {
   area.append(bubble);
   area.scrollTop = area.scrollHeight;
 }
+let conversationCache = [];
 async function loadConversations() {
-  const items = await api("/api/conversations");
+  conversationCache = await api("/api/conversations");
   const list = document.getElementById("conversationList");
-  list.replaceChildren();
-  if (!items.length) {
-    const note = document.createElement("div");
-    note.className = "note";
-    note.textContent = "لا توجد محادثات محفوظة بعد.";
-    list.append(note);
-    return;
-  }
-  items.forEach(item => {
-    const button = document.createElement("button");
-    button.className = "conversation-item" + (item.id === activeConversationId ? " active" : "");
-    button.textContent = item.title;
-    button.title = item.title;
-    button.onclick = () => openConversation(item.id);
-    list.append(button);
-  });
+  const archive = document.getElementById("conversationArchiveList");
+  list.replaceChildren(); if (archive) archive.replaceChildren();
+  const draw = (target, items) => {
+    if (!target) return;
+    if (!items.length) { const e=document.createElement("div"); e.className="empty-list"; e.textContent="لا توجد محادثات في هذا القسم."; target.append(e); return; }
+    items.forEach(item => { const row=document.createElement("div"); row.className="conversation-row"+(item.id===activeConversationId?" active":""); const b=document.createElement("button"); b.textContent=item.title; b.title=item.title; b.onclick=()=>openConversation(item.id); row.append(b); if(item.pinned){const p=document.createElement("span");p.className="pin-mark";p.textContent="مثبتة";row.append(p);} target.append(row); });
+  };
+  draw(list, conversationCache.filter(x=>!x.archived)); draw(archive, conversationCache.filter(x=>x.archived));
+  const active=conversationCache.find(x=>x.id===activeConversationId); if(active) document.getElementById("currentConversationTitle").textContent=active.title;
 }
 async function openConversation(id) {
   document.querySelector('[data-tab="assistantTab"]').click();
