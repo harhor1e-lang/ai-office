@@ -1,7 +1,6 @@
 name = "ali-ai-company-cloud"
 main = "worker.js"
 compatibility_date = "2026-11-26"
-migrations_dir = "migrations"
 
 [ai]
 binding = "AI"
@@ -10,6 +9,7 @@ binding = "AI"
 binding = "DB"
 database_name = "ali-ai-company-db"
 database_id = "3f3e09f5-c50e-449e-abb5-9c25e56c1586"
+migrations_dir = "migrations"
 
 [vars]
 ALLOWED_ORIGIN = "https://harhor1e-lang.github.io"
