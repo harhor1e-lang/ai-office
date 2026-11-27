@@ -147,22 +147,36 @@ async function loadConversations() {
 }
 async function openConversation(id) {
   document.querySelector('[data-tab="assistantTab"]').click();
-  activeConversationId = id;
-  const messages = await api("/api/conversations/" + id + "/messages");
-  const area = document.getElementById("chatMessages");
-  area.replaceChildren();
-  if (!messages.length) {
-    const note = document.createElement("div");
-    note.className = "note";
-    note.textContent = "اكتب أول رسالة لبدء المحادثة.";
-    area.append(note);
-  } else messages.forEach(message => appendChatMessage(message.role, message.content));
+  activeConversationId=id;
+  const messages=await api("/api/conversations/"+id+"/messages");
+  const area=document.getElementById("chatMessages"); area.replaceChildren();
+  if(messages.length) messages.forEach(m=>appendChatMessage(m.role,m.content));
+  else {const e=document.createElement("div");e.className="welcome-chat";e.innerHTML="<h2>محادثة جديدة</h2><p>اكتب رسالتك للبدء.</p>";area.append(e);}
   await loadConversations();
+  const item=conversationCache.find(x=>x.id===id); const locked=!!item?.locked;
+  document.getElementById("chatInput").disabled=locked; document.getElementById("sendChat").disabled=locked;
+  document.getElementById("chatNotice").textContent=locked?"المحادثة مقفلة. افتح الخيارات لإلغاء القفل.":"تُحفظ محادثاتك تلقائياً.";
 }
 async function createConversation() {
-  const item = await api("/api/conversations", { method: "POST", body: JSON.stringify({ title: "محادثة جديدة" }) });
-  activeConversationId = item.id;
-  document.getElementById("chatMessages").replaceChildren();
+  const item=await api("/api/conversations",{method:"POST",body:JSON.stringify({title:"محادثة جديدة"})});
+  activeConversationId=item.id;
+  document.getElementById("chatMessages").innerHTML='<div class="welcome-chat"><div class="welcome-mark">A</div><h2>بماذا تفكر اليوم؟</h2><p>اكتب أول رسالة للبدء.</p></div>';
+  document.getElementById("chatInput").disabled=false; document.getElementById("sendChat").disabled=false;
+  document.getElementById("currentConversationTitle").textContent=item.title;
+  document.getElementById("chatInput").focus(); await loadConversations();
+}
+async function runConversationAction(action) {
+  const item=conversationCache.find(x=>x.id===activeConversationId);
+  if(!item){document.getElementById("chatNotice").textContent="اختر محادثة أولاً.";return;}
+  document.getElementById("conversationMenu").hidden=true;
+  if(action==="rename"){const title=prompt("عنوان المحادثة:",item.title);if(title===null||!title.trim())return;await api("/api/conversations/"+item.id,{method:"PATCH",body:JSON.stringify({title:title.trim()})});}
+  else if(["pin","archive","lock"].includes(action)){const key={pin:"pinned",archive:"archived",lock:"locked"}[action];await api("/api/conversations/"+item.id,{method:"PATCH",body:JSON.stringify({[key]:!item[key]})});if(action==="archive"&&!item.archived){activeConversationId="";document.getElementById("chatMessages").innerHTML="<div class=welcome-chat><h2>تمت الأرشفة</h2></div>";}if(action==="lock"){document.getElementById("chatInput").disabled=!item.locked;document.getElementById("sendChat").disabled=!item.locked;}}
+  else if(action==="delete"){if(!confirm("حذف المحادثة نهائياً؟"))return;await api("/api/conversations/"+item.id,{method:"DELETE"});activeConversationId="";document.getElementById("chatMessages").innerHTML="<div class=welcome-chat><h2>محادثة جديدة</h2></div>";}
+  else if(action==="share"){const ms=await api("/api/conversations/"+item.id+"/messages");const txt=item.title+"\n\n"+ms.map(m=>(m.role==="user"?"أنت":"ALI AI")+": "+m.content).join("\n\n");if(navigator.share)await navigator.share({title:item.title,text:txt});else{await navigator.clipboard.writeText(txt);document.getElementById("chatNotice").textContent="تم نسخ نص المحادثة.";}}
+  else if(action==="search"){const q=prompt("ابحث داخل هذه المحادثة:");if(!q)return;const ms=await api("/api/conversations/"+item.id+"/messages");const found=ms.filter(m=>m.content.toLowerCase().includes(q.toLowerCase()));const area=document.getElementById("chatMessages");area.replaceChildren();if(found.length)found.forEach(m=>appendChatMessage(m.role,m.content));else area.textContent="لا توجد نتائج.";document.getElementById("chatNotice").textContent="نتائج البحث: "+found.length;}
+  else if(action==="files")document.getElementById("chatNotice").textContent="رفع الملفات يحتاج ربط مساحة تخزين آمنة؛ لم تُفعّل هذه الوظيفة بعد.";
+  else if(action==="add")document.getElementById("chatNotice").textContent="ربط إضافة المحتوى إلى المشاريع سيكون ضمن المرحلة التالية.";
+  else if(action==="install")document.getElementById("chatNotice").textContent="من قائمة المتصفح اختر إضافة إلى الشاشة الرئيسية إذا كان الخيار متاحاً.";
   await loadConversations();
 }
 async function loadProjects() {
@@ -317,7 +331,10 @@ document.getElementById("headerLogout").onclick = async () => {
   activeConversationId = "";
   showSignedOut("تم تسجيل الخروج من حسابك.");
 };
-document.getElementById("newConversation").onclick = createConversation;
+document.getElementById("newConversation").onclick=()=>createConversation().catch(e=>document.getElementById("chatNotice").textContent=e.message);
+document.getElementById("conversationMenuToggle").onclick=()=>{const m=document.getElementById("conversationMenu");m.hidden=!m.hidden;};
+document.getElementById("conversationMenu").addEventListener("click",e=>{const a=e.target.closest("[data-action]")?.dataset.action;if(a)runConversationAction(a).catch(err=>document.getElementById("chatNotice").textContent=err.message);});
+document.addEventListener("click",e=>{if(!e.target.closest(".chat-menu-wrap"))document.getElementById("conversationMenu").hidden=true;});
 document.getElementById("sendChat").onclick = sendChat;
 document.getElementById("chatInput").addEventListener("keydown", event => {
   if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendChat(); }
