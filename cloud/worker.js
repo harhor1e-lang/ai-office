@@ -154,14 +154,13 @@ async function finishOAuth(request, env, provider) {
     });
   }
   const stateRow = await env.DB.prepare(
-    "SELECT state,provider FROM oauth_states WHERE state=? AND provider=? AND expires_at>?"
+    "DELETE FROM oauth_states WHERE state=? AND provider=? AND expires_at>? RETURNING state"
   ).bind(state, provider, new Date().toISOString()).first();
   if (!stateRow) {
     return new Response("Invalid or expired sign-in request. Please try again.", {
       status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
     });
   }
-  await env.DB.prepare("DELETE FROM oauth_states WHERE state=?").bind(state).run();
 
   const profile = await exchangeProviderCode(request, env, provider, code);
   const now = new Date().toISOString();
@@ -202,10 +201,9 @@ async function exchangeLoginCode(request, env, origin) {
   const hash = await sha256(code);
   const now = new Date().toISOString();
   const row = await env.DB.prepare(
-    "SELECT user_id FROM auth_codes WHERE code_hash=? AND expires_at>?"
+    "DELETE FROM auth_codes WHERE code_hash=? AND expires_at>? RETURNING user_id"
   ).bind(hash, now).first();
   if (!row) return json({ error: "انتهت صلاحية تسجيل الدخول. حاول مرة أخرى." }, 401, origin);
-  await env.DB.prepare("DELETE FROM auth_codes WHERE code_hash=?").bind(hash).run();
 
   const sessionToken = randomToken();
   const expires = new Date(Date.now() + SESSION_DAYS * 86400000).toISOString();
