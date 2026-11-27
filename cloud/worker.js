@@ -50,7 +50,7 @@ function readCookie(request, name) {
   return part ? decodeURIComponent(part.slice(prefix.length)) : "";
 }
 function clearOAuthCookie(provider) {
-  return "oauth_state_" + provider + "=; Path=/auth/" + provider + "; Max-Age=0; HttpOnly; Secure; SameSite=Lax";
+  return "oauth_state_" + provider + "=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None";
 }
 async function beginOAuth(request, env, provider) {
   const clientId = provider === "google" ? env.GOOGLE_CLIENT_ID : env.GITHUB_CLIENT_ID;
@@ -79,7 +79,7 @@ async function beginOAuth(request, env, provider) {
     status: 302,
     headers: {
       "Location": auth.toString(),
-      "Set-Cookie": "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/auth/" + provider + "; Max-Age=600; HttpOnly; Secure; SameSite=Lax",
+      "Set-Cookie": "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/; Max-Age=600; HttpOnly; Secure; SameSite=None",
       "Cache-Control": "no-store"
     }
   });
