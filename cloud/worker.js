@@ -319,7 +319,14 @@ export default {
           return await finishOAuth(request, env, provider);
         }
         return new Response("Method not allowed", { status: 405 });
-      } catch {
+      } catch (error) {
+        // Safe diagnostic only: never log OAuth codes, cookies, tokens, or secrets.
+        console.error("OAuth flow failed", {
+          provider,
+          action,
+          errorName: error instanceof Error ? error.name : "UnknownError",
+          errorMessage: error instanceof Error ? error.message : "Unknown OAuth error"
+        });
         return new Response("Sign-in could not be completed. Please try again.", {
           status: 400,
           headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
