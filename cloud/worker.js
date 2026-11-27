@@ -317,8 +317,8 @@ async function handleChat(request, env, origin, user) {
   await env.DB.prepare(
     "INSERT INTO messages (id,conversation_id,user_id,role,content,created_at) VALUES(?,?,?,?,?,?)"
   ).bind(crypto.randomUUID(), conversationId, user.id, "user", content, now).run();
-  await env.DB.prepare("UPDATE conversations SET updated_at=? WHERE id=? AND user_id=?")
-    .bind(now, conversationId, user.id).run();
+  await env.DB.prepare("UPDATE conversations SET title=CASE WHEN title='محادثة جديدة' THEN ? ELSE title END,updated_at=? WHERE id=? AND user_id=?")
+    .bind(content.replace(/\s+/g, " ").slice(0, 52) + (content.length > 52 ? "…" : ""), now, conversationId, user.id).run();
 
   const history = await env.DB.prepare(
     "SELECT role,content FROM messages WHERE conversation_id=? AND user_id=? ORDER BY created_at DESC LIMIT 20"
@@ -413,7 +413,7 @@ export default {
 
       if (url.pathname === "/api/conversations" && request.method === "GET") {
         const { results } = await env.DB.prepare(
-          "SELECT id,title,created_at,updated_at FROM conversations WHERE user_id=? ORDER BY updated_at DESC LIMIT 100"
+          "SELECT id,title,created_at,updated_at,pinned,archived,locked FROM conversations WHERE user_id=? ORDER BY pinned DESC,updated_at DESC LIMIT 100"
         ).bind(user.id).all();
         return json(results || [], 200, origin);
       }
@@ -427,6 +427,34 @@ export default {
           "INSERT INTO conversations (id,user_id,title,created_at,updated_at) VALUES(?,?,?,?,?)"
         ).bind(id, user.id, title, now, now).run();
         return json({ id, title, created_at: now, updated_at: now }, 201, origin);
+      }
+      const conversationMatch = url.pathname.match(/^\/api\/conversations\/([a-f0-9-]+)$/i);
+      if (conversationMatch && request.method === "PATCH") {
+        const body = await readJson(request);
+        const existing = await env.DB.prepare("SELECT id,locked FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).first();
+        if (!existing) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
+        if (existing.locked && body?.locked !== false) return json({ error: "المحادثة مقفلة. ألغِ القفل أولاً." }, 423, origin);
+        const keys = ["title","pinned","archived","locked"].filter(key => Object.prototype.hasOwnProperty.call(body || {}, key));
+        if (!keys.length) return json({ error: "لا توجد تغييرات صالحة." }, 400, origin);
+        const sets = [], values = [];
+        for (const key of keys) {
+          if (key === "title") {
+            const title = String(body.title || "").trim().slice(0, 120);
+            if (!title) return json({ error: "عنوان المحادثة مطلوب." }, 400, origin);
+            sets.push("title=?"); values.push(title);
+          } else { sets.push(key + "=?"); values.push(body[key] ? 1 : 0); }
+        }
+        sets.push("updated_at=?"); values.push(new Date().toISOString(), conversationMatch[1], user.id);
+        await env.DB.prepare("UPDATE conversations SET " + sets.join(",") + " WHERE id=? AND user_id=?").bind(...values).run();
+        return json({ ok: true }, 200, origin);
+      }
+      if (conversationMatch && request.method === "DELETE") {
+        const existing = await env.DB.prepare("SELECT id,locked FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).first();
+        if (!existing) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
+        if (existing.locked) return json({ error: "المحادثة مقفلة. ألغِ القفل قبل حذفها." }, 423, origin);
+        await env.DB.prepare("DELETE FROM messages WHERE conversation_id=? AND user_id=?").bind(conversationMatch[1], user.id).run();
+        await env.DB.prepare("DELETE FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).run();
+        return json({ ok: true }, 200, origin);
       }
       const messagesMatch = url.pathname.match(/^\/api\/conversations\/([a-f0-9-]+)\/messages$/i);
       if (messagesMatch && request.method === "GET") {
