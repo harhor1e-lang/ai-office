@@ -43,6 +43,15 @@ function frontendUrl(env) {
 function callbackUrl(request, provider) {
   return new URL("/auth/" + provider + "/callback", new URL(request.url).origin).toString();
 }
+function readCookie(request, name) {
+  const cookie = request.headers.get("Cookie") || "";
+  const prefix = name + "=";
+  const part = cookie.split(";").map(value => value.trim()).find(value => value.startsWith(prefix));
+  return part ? decodeURIComponent(part.slice(prefix.length)) : "";
+}
+function clearOAuthCookie(provider) {
+  return "oauth_state_" + provider + "=; Path=/auth/" + provider + "; Max-Age=0; HttpOnly; Secure; SameSite=Lax";
+}
 async function beginOAuth(request, env, provider) {
   const clientId = provider === "google" ? env.GOOGLE_CLIENT_ID : env.GITHUB_CLIENT_ID;
   if (!clientId) return new Response("OAuth provider is not configured yet.", { status: 503 });
@@ -66,7 +75,9 @@ async function beginOAuth(request, env, provider) {
   } else {
     auth.searchParams.set("scope", "read:user user:email");
   }
-  return Response.redirect(auth.toString(), 302);
+  const response = Response.redirect(auth.toString(), 302);
+  response.headers.append("Set-Cookie", "oauth_state_" + provider + "=" + encodeURIComponent(state) + "; Path=/auth/" + provider + "; Max-Age=600; HttpOnly; Secure; SameSite=Lax");
+  return response;
 }
 async function exchangeProviderCode(request, env, provider, code) {
   const redirectUri = callbackUrl(request, provider);
@@ -136,10 +147,20 @@ async function finishOAuth(request, env, provider) {
   const url = new URL(request.url);
   const state = url.searchParams.get("state") || "";
   const code = url.searchParams.get("code") || "";
+  const browserState = readCookie(request, "oauth_state_" + provider);
+  if (!state || !browserState || state !== browserState || !code) {
+    return new Response("Invalid or expired sign-in request. Please try again.", {
+      status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+    });
+  }
   const stateRow = await env.DB.prepare(
     "SELECT state,provider FROM oauth_states WHERE state=? AND provider=? AND expires_at>?"
   ).bind(state, provider, new Date().toISOString()).first();
-  if (!stateRow || !code) return new Response("Invalid or expired sign-in request. Please try again.", { status: 400 });
+  if (!stateRow) {
+    return new Response("Invalid or expired sign-in request. Please try again.", {
+      status: 400, headers: { "Set-Cookie": clearOAuthCookie(provider), "Cache-Control": "no-store" }
+    });
+  }
   await env.DB.prepare("DELETE FROM oauth_states WHERE state=?").bind(state).run();
 
   const profile = await exchangeProviderCode(request, env, provider, code);
@@ -169,7 +190,10 @@ async function finishOAuth(request, env, provider) {
   ).bind(await sha256(oneTimeCode), userId, new Date(Date.now() + 2 * 60 * 1000).toISOString(), now).run();
   const destination = frontendUrl(env);
   destination.searchParams.set("auth_code", oneTimeCode);
-  return Response.redirect(destination.toString(), 302);
+  const response = Response.redirect(destination.toString(), 302);
+  response.headers.append("Set-Cookie", clearOAuthCookie(provider));
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }
 async function exchangeLoginCode(request, env, origin) {
   const body = await readJson(request);
