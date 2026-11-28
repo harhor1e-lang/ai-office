@@ -790,19 +790,39 @@ try{
   const deskNode=document.getElementById('atdesks');if(deskNode)deskNode.textContent=deskCount;
   const doneNode=document.getElementById('done');
   if(doneNode)doneNode.textContent=team.filter(a=>a.state==='على مكتبه').length;
+  const meeting=!!window.__aliMeetingActive;
   avatars.forEach(v=>{
-   const a=v.agent;
-   if(v.isManager)return;
+   const a=v.agent,moving=!!(a.path&&a.path.length),phase=time*8+v.phase;
+   if(v.isManager){
+    const target=meeting?new THREE.Vector3(3.05,0,3.25):new THREE.Vector3(10,0,-5.55);
+    v.root.position.lerp(target,Math.min(1,dt*1.5));
+    if(meeting){v.root.rotation.y=Math.PI/2;v.legL.rotation.x=-.95;v.legR.rotation.x=-.95;v.armL.rotation.x=-.58;v.armR.rotation.x=-.58;}
+    else{v.root.rotation.y=Math.PI;v.legL.rotation.x=-.9;v.legR.rotation.x=-.9;v.armL.rotation.x=-.62+Math.sin(time*7)*.08;v.armR.rotation.x=-.62+Math.cos(time*7)*.08;}
+    return;
+   }
    const p=mapPos(a.x,a.y);v.root.position.set(p.x,0,p.z);
-   const moving=!!(a.path&&a.path.length),phase=time*8+v.phase;
    v.root.position.y=moving?Math.abs(Math.sin(phase))*.055:Math.sin(time*1.1+v.phase)*.009;
-   if(moving){v.legL.rotation.x=Math.sin(phase)*.5;v.legR.rotation.x=-Math.sin(phase)*.5;v.armL.rotation.x=-Math.sin(phase)*.35;v.armR.rotation.x=Math.sin(phase)*.35;const next=a.path[0];if(next){const dx=next[0]-a.x,dz=next[1]-a.y;v.root.rotation.y=Math.atan2(dx,dz)}}
-   else{v.legL.rotation.x*=.78;v.legR.rotation.x*=.78;v.armL.rotation.x*=.78;v.armR.rotation.x*=.78}
+   if(moving){
+    v.legL.rotation.x=Math.sin(phase)*.5;v.legR.rotation.x=-Math.sin(phase)*.5;
+    v.armL.rotation.x=-Math.sin(phase)*.35;v.armR.rotation.x=Math.sin(phase)*.35;
+    const next=a.path[0];if(next){const dx=next[0]-a.x,dz=next[1]-a.y;v.root.rotation.y=Math.atan2(dx,dz)}
+   }else if(a.state==='في قاعة الاجتماعات'){
+    const north=a.id<15;v.root.rotation.y=north?0:Math.PI;
+    const leg=north?-.98:.98,arm=north?-.58:.58;
+    v.legL.rotation.x=leg;v.legR.rotation.x=leg;
+    v.armL.rotation.x=arm+Math.sin(time*2.4+v.phase)*.035;
+    v.armR.rotation.x=arm+Math.cos(time*2.4+v.phase)*.035;
+   }else if(a.state==='على مكتبه'){
+    v.root.rotation.y=Math.PI;
+    v.legL.rotation.x=-.92;v.legR.rotation.x=-.92;
+    v.armL.rotation.x=-.64+Math.sin(time*7+v.phase)*.09;
+    v.armR.rotation.x=-.64+Math.cos(time*7+v.phase)*.09;
+   }else{
+    v.legL.rotation.x*=.78;v.legR.rotation.x*=.78;
+    v.armL.rotation.x*=.78;v.armR.rotation.x*=.78;
+   }
    v.halo.visible=a.id===window.__aliSelectedEmployee;
   });
-  const meeting=!!window.__aliMeetingActive;
-  const managerTarget=meeting?new THREE.Vector3(3.05,0,3.25):new THREE.Vector3(10,0,-5.55);
-  managerAvatar.position.lerp(managerTarget,Math.min(1,dt*1.5));
   renderer.render(scene,camera);
  }
  window.__aliScene3D={scene,camera,renderer};
