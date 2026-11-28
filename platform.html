@@ -134,7 +134,7 @@ box(50,50,315,185,'#343b40','#c4a66b',4);txt('مكتب المدير التنفي
 box(390,50,405,185,'#263f4b','#789b9a',4);txt('قاعة الاجتماعات',592,80,17);c.fillStyle='#536e7e';c.beginPath();c.ellipse(592,151,112,40,0,0,Math.PI*2);c.fill();c.strokeStyle='#a2b8c4';c.lineWidth=3;c.stroke();for(let i=0;i<6;i++){let a=i*Math.PI/3;c.fillStyle='#263c4e';c.beginPath();c.arc(592+Math.cos(a)*140,151+Math.sin(a)*58,12,0,Math.PI*2);c.fill()}
 box(820,50,525,185,'#293f4d','#788da0',4);txt('الاستقبال والخدمات',1080,82,17);box(955,120,250,52,'#765d40','#c6a46c',2);txt('استقبال المنصة',1080,153,13,'#fff0d0');
 box(50,250,1295,30,'#566b7a','#a2b0ba',1);txt('الممر الرئيسي العلوي',700,271,11,'#f2dfb6');box(675,280,50,570,'#566b7a','#a2b0ba',1);box(50,810,1295,50,'#566b7a','#a2b0ba',1);txt('الممر الرئيسي — تنقل الموظفين بين الأقسام',700,841,14,'#f2dfb6');
-rooms.forEach(room);rooms.forEach((r,k)=>{for(let j=0;j<10;j++){let d=desks[k*10+j];desk(d.x,d.y);txt('مكتب '+(k*10+j+1),d.x,d.y-34,9,'#f0d39a')}});
+rooms.forEach(room);rooms.forEach((r,k)=>{for(let j=0;j<10;j++){let d=desks[k*10+j];desk(d.x,d.y);txt('مكتب '+(k*10+j+1),d.x,d.y-34,9,'#f0d39a')}});c.save();let pulse=13+Math.sin(performance.now()/420)*3;c.shadowColor='#61e4f0';c.shadowBlur=24;let hub=c.createLinearGradient(645,350,755,410);hub.addColorStop(0,'#244b61');hub.addColorStop(1,'#172d49');box(645,350,110,58,hub,'#7ce6ef',2);c.shadowBlur=0;txt('مركز دعم AI',700,374,12,'#c9f7ff');txt('AI HUB',700,393,9,'#8eeaf4');c.strokeStyle='#70e5f2';c.globalAlpha=.6;c.lineWidth=2;c.beginPath();c.arc(700,420,pulse,0,Math.PI*2);c.stroke();c.restore();
 box(50,885,1295,170,'#203747','#758b9d',3);txt('الخدمات والطباعة والاستراحة',700,915,15);box(120,950,225,65,'#465d6b','#9aabb6',2);txt('الطابعة المركزية',232,988,13);box(520,950,260,65,'#465d6b','#9aabb6',2);txt('منطقة الاستراحة',650,988,13);box(1035,950,225,65,'#465d6b','#9aabb6',2);txt('أرشيف الملفات',1147,988,13)
 }
 function person(a){
@@ -174,7 +174,7 @@ function route(a,dest){
  let k=desks[a.id].room,door=[255,700,1145][k],p;
  if(dest==='manager')p=[[door,800],[700,835],[700,265],[207,265],[207,185]];
  else if(dest==='meeting')p=[[door,800],[700,835],[700,265],[592,265],[592,205]];
- else if(dest==='assistant')p=[[door,800],[700,835],[700,265],[700,310],[700,420]];
+ else if(dest==='assistant'){const slot=a.id%3,spot=[[660,420],[700,420],[740,420]][slot];p=[[door,800],[700,835],[700,265],[700,310],[spot[0],390],[spot[0],spot[1]]];}
  else if(dest==='printer')p=[[door,800],[700,835],[700,875],[232,875],[232,935]];
  else p=[[door,800],[700,835],[700,265],[door,265],[a.home.x,a.home.y]];
  a.path=p;a.dest=dest;
