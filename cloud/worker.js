@@ -6,7 +6,7 @@ function corsHeaders(origin) {
   return {
     "access-control-allow-origin": origin,
     "access-control-allow-methods": "GET,POST,PATCH,DELETE,OPTIONS",
-    "access-control-allow-headers": "Authorization,Content-Type",
+    "access-control-allow-headers": "Authorization,Content-Type,X-Conversation-Unlock",
     "vary": "Origin",
     "cache-control": "no-store"
   };
@@ -279,6 +279,56 @@ function clientRateKey(request, scope) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   return scope + ":" + ip;
 }
+async function hashPin(pin, saltHex) {
+  const salt = new Uint8Array(saltHex.match(/.{2}/g).map(x => parseInt(x, 16)));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 120000 }, key, 256);
+  return [...new Uint8Array(bits)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+async function requireConversationUnlock(request, env, user, id) {
+  const lock = await env.DB.prepare("SELECT pin_hash FROM conversation_locks WHERE conversation_id=? AND user_id=?").bind(id,user.id).first();
+  if (!lock) return true;
+  const token = request.headers.get("X-Conversation-Unlock") || "";
+  if (token.length < 30 || token.length > 200) return false;
+  const valid = await env.DB.prepare("SELECT token_hash FROM conversation_unlocks WHERE token_hash=? AND conversation_id=? AND user_id=? AND expires_at>?").bind(await sha256(token),id,user.id,new Date().toISOString()).first();
+  return !!valid;
+}
+async function setConversationPin(request,env,origin,user,id) {
+  const owned=await env.DB.prepare("SELECT id FROM conversations WHERE id=? AND user_id=?").bind(id,user.id).first();
+  if(!owned) return json({error:"المحادثة غير موجودة ضمن حسابك."},404,origin);
+  if(!await rateLimit(env,"pin-set:"+user.id+":"+id,5,300)) return json({error:"محاولات تغيير الرمز كثيرة. حاول لاحقاً."},429,origin);
+  const body=await readJson(request), pin=String(body?.pin||"");
+  if(!/^\d{4,12}$/.test(pin)) return json({error:"اختر رمزاً رقمياً من 4 إلى 12 رقماً."},400,origin);
+  const existing=await env.DB.prepare("SELECT pin_salt FROM conversation_locks WHERE conversation_id=? AND user_id=?").bind(id,user.id).first();
+  if(existing && !await requireConversationUnlock(request,env,user,id)) return json({error:"افتح المحادثة برمزها الحالي أولاً قبل تغييره."},423,origin);
+  const saltHex=[...crypto.getRandomValues(new Uint8Array(16))].map(x=>x.toString(16).padStart(2,"0")).join("");
+  const pinHash=await hashPin(pin,saltHex), now=new Date().toISOString();
+  await env.DB.prepare("INSERT INTO conversation_locks (conversation_id,user_id,pin_salt,pin_hash,created_at,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(conversation_id,user_id) DO UPDATE SET pin_salt=excluded.pin_salt,pin_hash=excluded.pin_hash,updated_at=excluded.updated_at").bind(id,user.id,saltHex,pinHash,now,now).run();
+  await env.DB.prepare("UPDATE conversations SET locked=1 WHERE id=? AND user_id=?").bind(id,user.id).run();
+  await env.DB.prepare("DELETE FROM conversation_unlocks WHERE conversation_id=? AND user_id=?").bind(id,user.id).run();
+  return json({ok:true,locked:true},200,origin);
+}
+async function unlockConversation(request,env,origin,user,id) {
+  if(!await rateLimit(env,"pin-unlock:"+user.id+":"+id,8,300)) return json({error:"محاولات الرمز كثيرة. انتظر قليلاً ثم حاول."},429,origin);
+  const lock=await env.DB.prepare("SELECT pin_salt,pin_hash FROM conversation_locks WHERE conversation_id=? AND user_id=?").bind(id,user.id).first();
+  if(!lock) return json({error:"هذه المحادثة غير مقفلة برمز."},404,origin);
+  const owned=await env.DB.prepare("SELECT id FROM conversations WHERE id=? AND user_id=?").bind(id,user.id).first();
+  if(!owned) return json({error:"المحادثة غير موجودة ضمن حسابك."},404,origin);
+  const body=await readJson(request), pin=String(body?.pin||"");
+  if(!/^\d{4,12}$/.test(pin) || await hashPin(pin,lock.pin_salt)!==lock.pin_hash) return json({error:"الرمز غير صحيح."},401,origin);
+  const token=randomToken(32), now=new Date().toISOString(), expires=new Date(Date.now()+30*60*1000).toISOString();
+  await env.DB.prepare("INSERT INTO conversation_unlocks (token_hash,conversation_id,user_id,expires_at,created_at) VALUES(?,?,?,?,?)").bind(await sha256(token),id,user.id,expires,now).run();
+  return json({token,expires_at:expires},200,origin);
+}
+async function removeConversationPin(request,env,origin,user,id) {
+  const owned=await env.DB.prepare("SELECT id FROM conversations WHERE id=? AND user_id=?").bind(id,user.id).first();
+  if(!owned) return json({error:"المحادثة غير موجودة ضمن حسابك."},404,origin);
+  if(!await requireConversationUnlock(request,env,user,id)) return json({error:"افتح المحادثة برمزها أولاً."},423,origin);
+  await env.DB.prepare("DELETE FROM conversation_locks WHERE conversation_id=? AND user_id=?").bind(id,user.id).run();
+  await env.DB.prepare("DELETE FROM conversation_unlocks WHERE conversation_id=? AND user_id=?").bind(id,user.id).run();
+  await env.DB.prepare("UPDATE conversations SET locked=0 WHERE id=? AND user_id=?").bind(id,user.id).run();
+  return json({ok:true,locked:false},200,origin);
+}
 async function makePlan(env, brief) {
   const system = `You are the project director of ALI AI COMPANY. Turn the user's request into a realistic, ordered project plan. Return ONLY valid JSON, no markdown, with this exact shape:
 {"title":"short project title","tasks":[{"title":"short task title","department":"department","description":"specific work and verifiable acceptance criteria"}]}
@@ -312,7 +362,7 @@ async function handleChat(request, env, origin, user) {
     "SELECT id,locked FROM conversations WHERE id=? AND user_id=?"
   ).bind(conversationId, user.id).first();
   if (!conversation) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
-  if (conversation.locked) return json({ error: "هذه المحادثة مقفلة. ألغِ القفل أولاً." }, 423, origin);
+  if (!await requireConversationUnlock(request, env, user, conversationId)) return json({ error: "هذه المحادثة مقفلة. أدخل رمزها أولاً." }, 423, origin);
 
   const now = new Date().toISOString();
   await env.DB.prepare(
@@ -414,7 +464,7 @@ export default {
 
       if (url.pathname === "/api/conversations" && request.method === "GET") {
         const { results } = await env.DB.prepare(
-          "SELECT id,title,created_at,updated_at,pinned,archived,locked FROM conversations WHERE user_id=? ORDER BY pinned DESC,updated_at DESC LIMIT 100"
+          "SELECT c.id,c.title,c.created_at,c.updated_at,c.pinned,c.archived,EXISTS(SELECT 1 FROM conversation_locks l WHERE l.conversation_id=c.id AND l.user_id=c.user_id) AS locked FROM conversations c WHERE c.user_id=? ORDER BY c.pinned DESC,c.updated_at DESC LIMIT 100"
         ).bind(user.id).all();
         return json(results || [], 200, origin);
       }
@@ -429,13 +479,22 @@ export default {
         ).bind(id, user.id, title, now, now).run();
         return json({ id, title, created_at: now, updated_at: now }, 201, origin);
       }
+      const pinMatch = url.pathname.match(/^\/api\/conversations\/([a-f0-9-]+)\/(lock|unlock)$/i);
+      if (pinMatch && request.method === "POST") {
+        if (pinMatch[2] === "lock") return await setConversationPin(request,env,origin,user,pinMatch[1]);
+        return await unlockConversation(request,env,origin,user,pinMatch[1]);
+      }
+      if (url.pathname.match(/^\/api\/conversations\/[a-f0-9-]+\/lock$/i) && request.method === "DELETE") {
+        const id = url.pathname.split("/")[3];
+        return await removeConversationPin(request,env,origin,user,id);
+      }
       const conversationMatch = url.pathname.match(/^\/api\/conversations\/([a-f0-9-]+)$/i);
       if (conversationMatch && request.method === "PATCH") {
         const body = await readJson(request);
         const existing = await env.DB.prepare("SELECT id,locked FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).first();
         if (!existing) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
-        if (existing.locked && body?.locked !== false) return json({ error: "المحادثة مقفلة. ألغِ القفل أولاً." }, 423, origin);
-        const keys = ["title","pinned","archived","locked"].filter(key => Object.prototype.hasOwnProperty.call(body || {}, key));
+        if (!await requireConversationUnlock(request,env,user,conversationMatch[1])) return json({ error: "المحادثة مقفلة. افتحها برمزها أولاً." }, 423, origin);
+        const keys = ["title","pinned","archived"].filter(key => Object.prototype.hasOwnProperty.call(body || {}, key));
         if (!keys.length) return json({ error: "لا توجد تغييرات صالحة." }, 400, origin);
         const sets = [], values = [];
         for (const key of keys) {
@@ -452,20 +511,21 @@ export default {
       if (conversationMatch && request.method === "DELETE") {
         const existing = await env.DB.prepare("SELECT id,locked FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).first();
         if (!existing) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
-        if (existing.locked) return json({ error: "المحادثة مقفلة. ألغِ القفل قبل حذفها." }, 423, origin);
+        if (!await requireConversationUnlock(request,env,user,conversationMatch[1])) return json({ error: "المحادثة مقفلة. افتحها برمزها أولاً." }, 423, origin);
         await env.DB.prepare("DELETE FROM messages WHERE conversation_id=? AND user_id=?").bind(conversationMatch[1], user.id).run();
         await env.DB.prepare("DELETE FROM conversations WHERE id=? AND user_id=?").bind(conversationMatch[1], user.id).run();
         return json({ ok: true }, 200, origin);
       }
       const messagesMatch = url.pathname.match(/^\/api\/conversations\/([a-f0-9-]+)\/messages$/i);
       if (messagesMatch && request.method === "GET") {
-        const { results } = await env.DB.prepare(
-          "SELECT id,role,content,created_at FROM messages WHERE conversation_id=? AND user_id=? ORDER BY created_at,id LIMIT 200"
-        ).bind(messagesMatch[1], user.id).all();
         const owns = await env.DB.prepare(
           "SELECT id FROM conversations WHERE id=? AND user_id=?"
         ).bind(messagesMatch[1], user.id).first();
         if (!owns) return json({ error: "المحادثة غير موجودة ضمن حسابك." }, 404, origin);
+        if (!await requireConversationUnlock(request,env,user,messagesMatch[1])) return json({ error: "هذه المحادثة مقفلة. أدخل رمزها أولاً." }, 423, origin);
+        const { results } = await env.DB.prepare(
+          "SELECT id,role,content,created_at FROM messages WHERE conversation_id=? AND user_id=? ORDER BY created_at,id LIMIT 200"
+        ).bind(messagesMatch[1], user.id).all();
         return json(results || [], 200, origin);
       }
       if (url.pathname === "/api/chat" && request.method === "POST") {
