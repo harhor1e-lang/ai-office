@@ -681,6 +681,8 @@ try{
   box(world,.12,.06,.1,m.gold,x+.42,.93,z+.18,false);
   cyl(world,.3,.3,.16,m.chair,x,.43,z+.78,18);
   cyl(world,.055,.055,.42,m.chair,x,.22,z+.78,10);
+  box(world,.52,.58,.13,m.chair,x,.72,z+1.08,false);
+  box(world,.62,.08,.5,mat(0x425c70),x,.49,z+.78,false);
   const c=document.createElement('canvas');c.width=384;c.height=72;const q=c.getContext('2d');q.fillStyle='#152b3e';q.fillRect(0,0,384,72);q.fillStyle='#f4dfad';q.font='bold 27px Tahoma';q.textAlign='center';q.direction='rtl';q.fillText(label,192,48);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthWrite:false}));sp.position.set(x,1.62,z-.24);sp.scale.set(1.15,.22,1);world.add(sp);
  }
  agents.forEach((a,i)=>{
@@ -701,7 +703,23 @@ try{
  for(let i=0;i<15;i++)meetingSeats.push({x:10.69-i*.46,z:4.78,side:'south'});
  meetingSeats.push({x:3.05,z:3.25,side:'head'});
  meetingSeats.push({x:11.85,z:3.25,side:'tail'});
- meetingSeats.forEach((p,i)=>{cyl(world,.28,.28,.16,m.chair,p.x,.43,p.z,18);cyl(world,.06,.06,.4,m.chair,p.x,.22,p.z,10);box(world,.48,.52,.1,m.chair,p.x,.72,p.z+(p.side==='north'?.32:p.side==='south'?-.32:0),false)});
+ meetingSeats.forEach((p,i)=>{
+  cyl(world,.28,.28,.16,m.chair,p.x,.43,p.z,18);
+  cyl(world,.06,.06,.4,m.chair,p.x,.22,p.z,10);
+  const backZ=p.side==='north'?p.z-.32:p.side==='south'?p.z+.32:p.z;
+  box(world,.48,.52,.1,m.chair,p.x,.72,backZ,false);
+  box(world,.62,.08,.52,mat(0x425c70),p.x,.49,p.z,false);
+ });
+ // conference presentation display, agenda and shared table equipment
+ box(world,3.45,1.48,.16,m.navy,7.45,1.65,-2.91,false);
+ box(world,3.12,1.15,.035,glowMat,7.45,1.68,-2.81,false);
+ box(world,2.72,.045,.025,m.gold,7.45,1.22,-2.78,false);
+ for(let i=0;i<4;i++){
+  const lx=5.05+i*1.55;
+  box(world,.52,.045,.38,mat(0x263e50,.35,.2),lx,1.0,3.25,false);
+  box(world,.43,.018,.29,glowMat,lx,1.035,3.25,false);
+ }
+ cyl(world,.18,.18,.08,m.gold,7.45,1.0,3.25,20);
  // central digital support station in the connecting lobby
  const hub=new THREE.Group();hub.position.set(1.9,.3,.2);world.add(hub);
  cyl(hub,.72,.8,.2,m.navy,0,.15,0,28);
