@@ -1,0 +1,137 @@
+/* ALI AI COMPANY — EVOLUTION / Scroll-Driven Edition */
+:root{
+ --bg:#f4f5f9;--panel:#ffffff;--line:#e2e5ef;--gold:#7057ff;--muted:#69728a;--text:#151a2d;
+ --ink:#151a2d;--violet:#7057ff;--mint:#24c9aa;--coral:#ff806e;
+ --motion-ease:cubic-bezier(.2,.75,.25,1);
+ color-scheme:light;
+}
+html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:86px}
+body{
+ background:
+ radial-gradient(ellipse at 8% 12%,rgba(112,87,255,.11),transparent 34%),
+ radial-gradient(ellipse at 92% 48%,rgba(36,201,170,.10),transparent 32%),
+ linear-gradient(180deg,#f8f9fc 0%,#eff1f7 48%,#f7f8fb 100%);
+ color:var(--text);overflow-x:hidden
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.18;
+ background-image:radial-gradient(#8790a8 .65px,transparent .65px);background-size:19px 19px;
+ mask-image:linear-gradient(to bottom,black,transparent 85%)
+}
+header{
+ position:sticky;top:0;z-index:900;padding:13px clamp(14px,4vw,56px);
+ background:rgba(18,23,42,.91);border:0;border-bottom:1px solid rgba(255,255,255,.12);
+ box-shadow:0 12px 34px rgba(24,29,54,.13);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)
+}
+.brand h1{color:#fff;letter-spacing:1.5px}.brand small{color:#b8bed1}
+.mark{border:0;border-radius:15px;color:#fff;background:linear-gradient(145deg,#7057ff,#a18cff);box-shadow:0 7px 22px #7057ff55}
+.live{background:rgba(36,201,170,.13);border:1px solid rgba(36,201,170,.35);color:#8af0d9}
+button{background:#f0f1f8;color:#202640;border:1px solid #dfe2ee;border-radius:12px;padding:11px 15px;font-weight:600;transition:transform .22s var(--motion-ease),box-shadow .22s,border-color .22s,background .22s}
+button:hover{border-color:#a99aff;color:#5540d2;box-shadow:0 9px 25px rgba(55,48,115,.1)}
+button.primary,.primary{background:linear-gradient(120deg,#7057ff,#927cff);color:#fff;border:0;box-shadow:0 10px 24px #7057ff36}
+button.primary:hover{color:white;box-shadow:0 14px 30px #7057ff55}
+main{max-width:1500px;padding:clamp(15px,3vw,42px)}
+.company-intro{
+ position:relative;isolation:isolate;overflow:hidden;min-height:min(88svh,850px);
+ display:grid;place-items:center;padding:clamp(50px,9vw,120px) 22px;
+ background:
+ radial-gradient(ellipse at 76% 38%,rgba(112,87,255,.43),transparent 33%),
+ radial-gradient(ellipse at 22% 78%,rgba(36,201,170,.26),transparent 32%),
+ linear-gradient(128deg,#10152a 0%,#1d2141 54%,#29204b 100%);
+ border:0;border-radius:0 0 42px 42px;color:#fff;
+ clip-path:inset(0 round 0 0 42px 42px);
+ transition:min-height .8s var(--motion-ease),opacity .6s,transform .8s var(--motion-ease),padding .8s;
+}
+.company-intro:before,.company-intro:after{content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none}
+.company-intro:before{width:min(65vw,720px);aspect-ratio:1;right:-8%;top:-22%;border:1px solid #ffffff22;box-shadow:0 0 0 42px #ffffff08,0 0 0 100px #ffffff05;animation:hero-orbit 22s linear infinite}
+.company-intro:after{width:min(42vw,480px);aspect-ratio:1;left:4%;bottom:-40%;background:radial-gradient(circle,#24c9aa38,transparent 68%);filter:blur(10px)}
+@keyframes hero-orbit{to{transform:rotate(360deg)}}
+.intro-core{width:min(100%,1000px);text-align:center;display:flex;align-items:center;flex-direction:column;gap:17px}
+.intro-emblem{width:82px;height:82px;display:grid;place-items:center;border-radius:27px;background:linear-gradient(145deg,#7057ff,#a18cff);color:white;font-size:40px;font-weight:900;box-shadow:0 20px 65px #7057ff66,0 0 0 12px #ffffff0b}
+.intro-kicker{color:#8cebd9;letter-spacing:4px;font-size:11px;font-weight:800}
+.intro-core h1{font-size:clamp(38px,8.5vw,100px);line-height:.98;letter-spacing:-3px;margin:8px 0;background:linear-gradient(100deg,#fff 18%,#b9adff 58%,#81ead7);background-clip:text;-webkit-background-clip:text;color:transparent}
+.intro-core p{color:#c7cbe0;letter-spacing:clamp(1px,.4vw,5px);font-size:clamp(10px,1.5vw,15px)}
+.intro-enter{margin-top:20px;min-width:190px;border:1px solid #ffffff35;background:#ffffff12;color:#fff;border-radius:99px;padding:15px 26px;backdrop-filter:blur(12px)}
+.intro-enter:hover{background:#fff;color:#171b33;transform:translateY(-3px)}
+.company-intro.is-hidden{min-height:0;height:0;padding-top:0;padding-bottom:0;opacity:0;transform:translateY(-45px);pointer-events:none;border-radius:0}
+main>.intro{min-height:250px;padding:clamp(26px,5vw,65px);margin:0 0 24px;border-radius:30px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:25px;background:linear-gradient(115deg,#171c36,#29214c 65%,#245e62);color:#fff;box-shadow:0 25px 70px #20234220}
+main>.intro:after{content:"AI";position:absolute;left:5%;top:-60%;font-size:clamp(180px,30vw,380px);font-weight:900;color:#ffffff08;line-height:1;pointer-events:none}
+main>.intro h2{font-size:clamp(25px,4vw,48px);margin:0 0 12px;letter-spacing:-1px}
+main>.intro p{color:#c9cde0;font-size:14px}
+.stats{position:relative;z-index:1}
+.stat{background:#ffffff12;border:1px solid #ffffff25;border-radius:18px;padding:15px 18px;backdrop-filter:blur(10px);min-width:105px}
+.stat b{color:#8cebd9;font-size:25px}.stat span{color:#d2d6e8}
+.tabs{position:sticky;top:73px;z-index:800;display:flex;gap:8px;padding:10px;margin:0 0 24px;border:1px solid #e4e6ef;border-radius:18px;background:#ffffffd9;box-shadow:0 12px 36px #20234212;backdrop-filter:blur(18px);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{white-space:nowrap;flex:0 0 auto;background:transparent;border-color:transparent;color:#68718a}
+.tabs button.active{background:#171c36;color:white;border-color:#171c36;box-shadow:0 8px 20px #171c3630}
+.tabview{min-height:65vh;scroll-margin-top:150px}
+.panel,.stat{box-shadow:0 16px 45px rgba(28,34,65,.07)}
+.panel{background:#fff;border:1px solid #e3e6ef;border-radius:24px;color:var(--text);overflow:hidden}
+.panelhead{background:linear-gradient(90deg,#f7f7fc,#fff);border-bottom:1px solid #eceef5;padding:17px 20px;color:#1b2039}
+.panelhead span{color:#828ba2}
+.side{gap:16px}
+.chat-panel{min-height:620px}
+.chat-gate{background:radial-gradient(ellipse at 50% 0%,#eeeaff,transparent 70%);padding:clamp(25px,6vw,65px)}
+.chat-gate h3{font-size:clamp(24px,3vw,36px);color:#1a1e37}
+.chat-gate p,.detail,.note{color:#737c94}
+.login-link{border:1px solid #e2e4ef;background:#fff;color:#262b44;border-radius:14px;padding:14px 17px;box-shadow:0 7px 22px #1e23420b}
+.login-link:hover{border-color:#8f7bff;color:#5743d1;transform:translateY(-2px)}
+.chat-toolbar{background:#fbfbfe;border-bottom:1px solid #eaecf3;padding:12px 16px}
+.chat-current-title strong{color:#242943}
+.chat-messages{background:radial-gradient(ellipse at 50% 0%,#f0efff 0%,#fff 58%);min-height:360px}
+.welcome-chat h2{color:#242943}
+.chat-compose{background:#fff;border:1px solid #e0e3ef;border-radius:20px;box-shadow:0 12px 35px #1e23420c;padding:10px}
+.chat-compose:focus-within{border-color:#9a89ff;box-shadow:0 0 0 4px #7057ff16,0 15px 40px #1e234210}
+.chat-compose textarea,textarea,input,select{color:#1b2038}
+.chat-compose textarea{background:transparent}
+.conversation-menu{background:#fff;border:1px solid #e5e6f0;border-radius:16px;box-shadow:0 20px 55px #14182b26}
+.conversation-menu button{color:#303651;background:#fff;border:0;border-radius:9px}
+.conversation-menu button:hover{background:#f0edff;color:#5945d4}
+.conversation-library{padding:clamp(16px,3vw,32px)}
+.conversation-library-intro{color:#737c94;margin-bottom:18px}
+.conversation-library-list .conversation-item,.conversation-library-list button{background:#fafaff;border:1px solid #e7e8f2;color:#252a44;border-radius:15px}
+.conversation-library-list .conversation-item:hover{background:#f1efff;border-color:#b6aaff}
+#buildingTab .viewport{background:#eef0f7;padding:14px}
+#buildingTab .viewport canvas{border-radius:17px;box-shadow:0 15px 45px #20234220}
+#buildingTab .controls{background:#fff}
+.log{color:#525c76}
+#requests textarea{background:#f8f9fc!important;color:#202640!important;border-color:#dfe2ed!important}
+#requests label{color:#6551e5!important}
+#taskBoard>div{background:#fafaff;border:1px solid #e6e8f1;border-radius:17px;padding:16px}
+.directory-grid,.company-grid{gap:18px}
+.employees{background:#fafaff}
+.employee{border:1px solid #e8eaf2;border-radius:14px;background:#fff}
+.employee.active{background:#f0edff;border-color:#a99aff}
+.info-card{background:#fff;border:1px solid #e3e6ef;border-radius:22px;padding:24px;box-shadow:0 15px 38px #2023420b;color:#626c85;min-height:150px}
+.info-card h3{color:#202640}
+.info-card b{color:#7057ff}
+#motionProgress{height:4px;background:linear-gradient(90deg,#24c9aa,#7057ff,#ff806e);box-shadow:0 0 16px #7057ff55}
+#motionTop{background:#171c36;color:#fff;border:1px solid #8f7bff;border-radius:16px;box-shadow:0 12px 30px #171c3640}
+.motion-reveal{will-change:opacity,transform}
+@keyframes evolution-enter{from{opacity:0;transform:translateY(70px) scale(.96);filter:blur(7px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@supports(animation-timeline:view()){
+ .motion-reveal{animation:evolution-enter linear both;animation-timeline:view();animation-range:entry 0% entry 48%}
+}
+@supports(animation-timeline:scroll()){
+ .company-intro .intro-core{animation:hero-fade linear both;animation-timeline:scroll(root block);animation-range:0vh 80vh}
+ @keyframes hero-fade{to{opacity:.25;transform:translateY(-65px) scale(.9)}}
+}
+@media(max-width:760px){
+ header{padding:10px 13px}.account-head{gap:5px}.account-head .live{display:none}
+ main{padding:14px}.company-intro{min-height:78svh;border-radius:0 0 26px 26px}
+ .intro-core h1{letter-spacing:-1.5px}.intro-emblem{width:65px;height:65px;border-radius:21px}
+ main>.intro{display:block;border-radius:23px;padding:27px 22px}
+ .stats{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .stat{min-width:0;padding:10px 8px}.stat b{font-size:20px}.stat span{font-size:9px}
+ .tabs{top:60px;border-radius:14px;margin-bottom:16px;padding:7px}
+ .tabs button{padding:10px 12px;font-size:11px}
+ .panel{border-radius:19px}.chat-panel{min-height:520px}
+ .assistant-layout,.directory-grid{grid-template-columns:minmax(0,1fr)!important}
+ .company-grid{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .company-intro:before{animation:none}
+ .company-intro .intro-core{animation:none!important}
+ .motion-reveal{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
+}
