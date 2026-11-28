@@ -619,7 +619,7 @@ try{
  const scene=new THREE.Scene();
  scene.background=new THREE.Color(0x9fb2bd);
  const camera=new THREE.OrthographicCamera(-16,16,12,-12,.1,100);
- camera.position.set(0,38,.01);camera.up.set(0,0,-1);camera.lookAt(0,0,0);
+ camera.position.set(0,38,2.21);camera.up.set(0,0,-1);camera.lookAt(0,0,2.2);
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.45));
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -746,7 +746,7 @@ try{
  const clock=new THREE.Clock();
  function resize(){
   const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight||560),aspect=w/h;
-  let viewH=24.5,viewW=viewH*aspect;
+  let viewH=29.5,viewW=viewH*aspect;
   if(viewW<30)viewH=30/aspect,viewW=30;
   camera.left=-viewW/2;camera.right=viewW/2;camera.top=viewH/2;camera.bottom=-viewH/2;camera.updateProjectionMatrix();
   renderer.setSize(w,h,false);
