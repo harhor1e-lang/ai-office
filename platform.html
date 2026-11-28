@@ -632,12 +632,12 @@ try{
  const camera=new THREE.OrthographicCamera(-16,16,12,-12,.1,100);
  camera.position.set(0,38,2.21);camera.up.set(0,0,-1);camera.lookAt(0,0,2.2);
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
- renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.45));
+ renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.25));
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
  host.appendChild(renderer.domElement);
  const hemi=new THREE.HemisphereLight(0xf0f7ff,0x45533e,2.15);scene.add(hemi);
- const sun=new THREE.DirectionalLight(0xffedcf,2.8);sun.position.set(-13,27,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-25;sun.shadow.camera.right=25;sun.shadow.camera.top=25;sun.shadow.camera.bottom=-25;sun.shadow.bias=-.00025;scene.add(sun);
+ const sun=new THREE.DirectionalLight(0xffedcf,2.8);sun.position.set(-13,27,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-25;sun.shadow.camera.right=25;sun.shadow.camera.top=25;sun.shadow.camera.bottom=-25;sun.shadow.bias=-.00025;scene.add(sun);
  const fill=new THREE.DirectionalLight(0x8bdcff,1.0);fill.position.set(16,13,-15);scene.add(fill);
  const mat=(color,rough=.78,metal=0)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
  const m={grass:mat(0x64865b),grass2:mat(0x7c9a69),road:mat(0x303b46,.96),concrete:mat(0xb8bcb5),wall:mat(0xe0ded3),navy:mat(0x1c3042),gold:mat(0xd9b66b,.35,.45),wood:mat(0x805d3f),desk:mat(0x9a7955),screen:mat(0x18394e,.25,.3),glass:mat(0x7ba5b8,.2,.35),leaf:mat(0x3f7546),leaf2:mat(0x66965b),trunk:mat(0x72503a),chair:mat(0x344a5e),skin:mat(0xd6a17e),shoe:mat(0x202a35)};
