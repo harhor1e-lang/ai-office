@@ -465,14 +465,14 @@ function home(){agents.forEach(a=>{a.wait=0;if(a.state!=='على مكتبه')rou
 cv.addEventListener('click',e=>{let r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width,y=(e.clientY-r.top)*cv.height/r.height,b=-1,d0=30;agents.forEach((a,i)=>{let d=Math.hypot(a.x-x,a.y-y);if(d<d0){d0=d;b=i}});if(b>=0)select(b)});
 document.getElementById('start').onclick=()=>{running=true;log('بدأ يوم العمل الافتراضي.')};document.getElementById('pause').onclick=()=>{running=false;log('تم إيقاف الحركة مؤقتاً.')};document.getElementById('call').onclick=call;document.getElementById('meet').onclick=meeting;document.getElementById('return').onclick=home;
 function loop(t){let dt=Math.min((t-last)/1000||0,.05);last=t;if(running){clock+=dt;tick(dt);if(clock>5){clock=0;let idle=agents.filter(a=>!a.path.length&&!a.wait&&a.state==='على مكتبه');if(idle.length){let a=idle[Math.floor(Math.random()*idle.length)],v=Math.random();route(a,v<.6?'printer':v<.82?'manager':'meeting');log(a.name+' بدأ نشاطاً جديداً: '+a.task)}}}else agents.forEach(a=>a.phase+=dt*.7);render();requestAnimationFrame(loop)}
-document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{const target=document.getElementById(btn.dataset.tab);document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));if(target)target.scrollIntoView({behavior:'smooth',block:'start'});if(btn.dataset.tab==='employeesTab')select(selected);if(btn.dataset.tab==='requests'&&sessionToken)loadProjects();if(btn.dataset.tab==='conversationsTab'&&sessionToken)loadConversations()}));select(0);requestAnimationFrame(loop);
+document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{const target=document.getElementById(btn.dataset.tab);document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('main > .tabview').forEach(section=>section.classList.toggle('active',section===target));if(target){target.scrollIntoView({behavior:'smooth',block:'start'});target.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:320,easing:'ease-out'});}if(btn.dataset.tab==='employeesTab')select(selected);if(btn.dataset.tab==='requests'&&sessionToken)loadProjects();if(btn.dataset.tab==='conversationsTab'&&sessionToken)loadConversations()}));select(0);requestAnimationFrame(loop);
 </script><script src="./motion.js?v=1" defer></script><script src="./evolution.js?v=1" defer></script>
 <style>
-/* Scroll-first continuous page: all workspaces are stacked as scenes */
-.tabview{display:block!important;visibility:visible!important;opacity:1!important;position:relative;margin:0 0 clamp(38px,7vw,100px);padding-top:clamp(12px,2vw,28px);scroll-margin-top:145px}
-.tabview:before{content:"";display:block;width:56px;height:4px;border-radius:8px;background:linear-gradient(90deg,#24c9aa,#7057ff);margin:0 0 20px auto;opacity:.8}
-.tabview>.panel,.tabview>.layout,.tabview>.assistant-layout,.tabview>.directory-grid,.tabview>.company-grid{animation:none}
-#conversationsTab,#requests,#buildingTab,#employeesTab,#companyTab{min-height:65vh}
+/* Single-view navigation: each workspace appears only inside its own tab */
+main > .tabview{display:none!important;visibility:hidden!important;opacity:0;position:relative;margin:0;padding-top:clamp(12px,2vw,28px);scroll-margin-top:145px;min-height:0}
+main > .tabview.active{display:block!important;visibility:visible!important;opacity:1}
+main > .tabview:before{content:"";display:block;width:56px;height:4px;border-radius:8px;background:linear-gradient(90deg,#24c9aa,#7057ff);margin:0 0 20px auto;opacity:.8}
+main > .tabview.active>.panel,main > .tabview.active>.layout,main > .tabview.active>.assistant-layout,main > .tabview.active>.directory-grid,main > .tabview.active>.company-grid{animation:none}
 #companyTab .company-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 #requests,#buildingTab,#employeesTab,#companyTab{content-visibility:auto;contain-intrinsic-size:800px}
 @media(prefers-reduced-motion:reduce){.tabview{content-visibility:visible}}
