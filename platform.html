@@ -186,7 +186,7 @@ function route(a,dest){
   else p=[point(1.05,here.z),point(1.05,0),point(1.8,0),point(spotX,spotZ)];
  }else if(dest==='meeting'){
   const i=a.id;
-  const seat=i<15?{x:4.15+i*.48,z:1.55}:{x:10.87-(i-15)*.48,z:5.05};
+  const seat=i<15?{x:4.25+i*.46,z:1.75}:{x:10.69-(i-15)*.46,z:4.78};
   if(a.id===0)p=[point(4.0,-3.0),point(4.0,-1.0),point(3.2,0),point(3.5,3.25),point(seat.x,seat.z)];
   else p=[point(1.05,here.z),point(1.05,0),point(2.8,0),point(3.2,3.25),point(seat.x,seat.z)];
  }else if(dest==='return'){
