@@ -20,9 +20,8 @@
   const nativeScrollTimeline = CSS.supports("animation-timeline: scroll()") &&
     CSS.supports("animation-range: entry 0% entry 35%");
   if (nativeScrollTimeline) {
-    progress.style.animation = "motion-progress linear both";
     const style = document.createElement("style");
-    style.textContent = "@keyframes motion-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}#motionProgress{animation-timeline:scroll(root block)}";
+    style.textContent = "@keyframes motion-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}#motionProgress{animation:motion-progress linear both;animation-timeline:scroll(root block)}";
     document.head.append(style);
   }
 
