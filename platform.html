@@ -125,7 +125,7 @@ const agents=names.map((n,i)=>{
  const px=700+wx*80,py=500+wz*80;
  return {id:i,name:n[0],code:n[1],dept:n[2],x:px,y:py,home:{x:px,y:py},path:[],state:'على مكتبه',task:'يعمل على الحاسوب',wait:0,phase:i*.7};
 });window.__aliOfficeAgents=agents;window.__aliMeetingActive=false;
-let selected=0,last=0,done=0;let companyTasks=[];let taskSeq=1;try{companyTasks=JSON.parse(localStorage.getItem('aliCompanyTasks')||'[]');taskSeq=companyTasks.reduce((m,t)=>Math.max(m,(t.id||0)+1),1)}catch(e){companyTasks=[]}
+let selected=0,last=0,done=0;window.__aliCompletedTasks=0;let companyTasks=[];let taskSeq=1;try{companyTasks=JSON.parse(localStorage.getItem('aliCompanyTasks')||'[]');taskSeq=companyTasks.reduce((m,t)=>Math.max(m,(t.id||0)+1),1)}catch(e){companyTasks=[]}
 const manager={x:205,y:155};
 function box(x,y,w,h,col,stroke='#72889b',lw=3){c.fillStyle=col;c.fillRect(x,y,w,h);c.strokeStyle=stroke;c.lineWidth=lw;c.strokeRect(x,y,w,h)}
 function txt(t,x,y,size=15,col='#e6eef5'){c.fillStyle=col;c.font='bold '+size+'px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(t,x,y)}
@@ -801,13 +801,20 @@ try{
     }
    }else if(a.wait>0){
     a.wait-=dt;
-    if(a.wait<=0&&a.dest!=='meeting'&&a.dest!=='return'){a.wait=0;route(a,'return');}
+    if(a.wait<=0&&a.dest!=='meeting'&&a.dest!=='return'){
+     if(a.dest==='assistant'){
+      window.__aliCompletedTasks=(window.__aliCompletedTasks||0)+1;
+      const completedNode=document.getElementById('done');
+      if(completedNode)completedNode.textContent=window.__aliCompletedTasks;
+     }
+     a.wait=0;route(a,'return');
+    }
    }
   });
   const deskCount=team.filter(a=>a.state==='على مكتبه'&&!a.path.length).length;
   const deskNode=document.getElementById('atdesks');if(deskNode)deskNode.textContent=deskCount;
   const doneNode=document.getElementById('done');
-  if(doneNode)doneNode.textContent=team.filter(a=>a.state==='على مكتبه').length;
+  if(doneNode)doneNode.textContent=window.__aliCompletedTasks||0;
   const meeting=!!window.__aliMeetingActive;
   avatars.forEach(v=>{
    const a=v.agent,moving=!!(a.path&&a.path.length),phase=time*8+v.phase;
