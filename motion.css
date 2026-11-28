@@ -1,0 +1,84 @@
+/* ALI AI COMPANY — Motion System v1
+   Scroll-driven motion + UI Moments. No dependencies. */
+:root{
+  --motion-ease:cubic-bezier(.2,.75,.25,1);
+  --motion-fast:180ms;
+  --motion-medium:420ms;
+  --motion-gold:rgba(216,181,107,.34);
+}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+#motionProgress{
+  position:fixed;inset:0 0 auto 0;height:3px;width:100%;z-index:2147483001;
+  pointer-events:none;transform:scaleX(0);transform-origin:right center;
+  background:linear-gradient(90deg,#8f6b35,#f3dda5,#d8b56b);
+  box-shadow:0 0 12px rgba(216,181,107,.42);
+}
+#motionTop{
+  position:fixed;inset:auto 22px 22px auto;z-index:1000;
+  width:44px;height:44px;padding:0;border-radius:15px;
+  display:grid;place-items:center;font-size:19px;font-weight:700;
+  color:#f4dfad;background:rgba(16,29,48,.9);
+  border:1px solid rgba(216,181,107,.55);
+  box-shadow:0 10px 30px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.08);
+  opacity:0;visibility:hidden;transform:translateY(12px) scale(.92);
+  transition:opacity var(--motion-fast) var(--motion-ease),transform var(--motion-fast) var(--motion-ease),visibility var(--motion-fast);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+#motionTop.is-visible{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+#motionTop:hover{border-color:#f0d99f;box-shadow:0 12px 34px rgba(216,181,107,.2)}
+.motion-reveal{will-change:opacity,transform}
+@keyframes motion-enter{
+  from{opacity:.12;transform:translate3d(0,24px,0) scale(.985);filter:blur(3px)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@supports (animation-timeline:view()) and (animation-range:entry 0% entry 35%){
+  .motion-reveal{
+    animation:motion-enter linear both;
+    animation-timeline:view();
+    animation-range:entry 0% entry 35%;
+  }
+}
+.motion-reveal.motion-visible{opacity:1;transform:none;filter:none}
+button,.login-link,.employee,.conversation-row,.conversation-item,.stat,.info-card,.task-card,.panel{
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    background-color var(--motion-fast) ease;
+}
+button:not(:disabled):active{transform:translateY(1px) scale(.985)}
+button:disabled{cursor:wait;opacity:.65}
+.panel:hover,.info-card:hover,.task-card:hover{
+  border-color:rgba(216,181,107,.48);
+  box-shadow:0 18px 46px rgba(0,0,0,.34),0 0 0 1px rgba(216,181,107,.05);
+}
+.stat:hover,.employee:hover,.conversation-item:hover,.conversation-row:hover{
+  transform:translateY(-2px);
+}
+.tabs button{position:relative;isolation:isolate;overflow:hidden}
+.tabs button.active{box-shadow:0 8px 26px rgba(216,181,107,.18)}
+.tabs button.active:after{
+  content:"";position:absolute;inset:auto 15% 3px;height:2px;border-radius:5px;
+  background:currentColor;opacity:.6;animation:tab-arrive 260ms var(--motion-ease) both;
+}
+@keyframes tab-arrive{from{transform:scaleX(.15);opacity:0}to{transform:scaleX(1);opacity:.6}}
+.chat-bubble{animation:message-arrive 300ms var(--motion-ease) both}
+@keyframes message-arrive{from{opacity:0;transform:translateY(9px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+.conversation-menu.is-open{animation:menu-arrive 170ms var(--motion-ease) both;transform-origin:top left}
+@keyframes menu-arrive{from{opacity:0;transform:translateY(-7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-compose:focus-within{border-color:rgba(216,181,107,.72);box-shadow:0 0 0 3px rgba(216,181,107,.09),0 14px 35px rgba(0,0,0,.2)}
+.employee.active .face{box-shadow:0 0 0 3px rgba(216,181,107,.12),0 8px 22px rgba(0,0,0,.3)}
+#scene{transform-origin:center;will-change:transform}
+@media(hover:hover) and (pointer:fine){
+  .panel,.info-card,.task-card{transform:translateZ(0)}
+  .login-link:hover,button:not(:disabled):hover{transform:translateY(-1px)}
+}
+@media(max-width:600px){
+  #motionTop{inset:auto 14px 14px auto;width:42px;height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .motion-reveal{opacity:1!important;transform:none!important;filter:none!important}
+  #motionTop{transition:none}
+}
