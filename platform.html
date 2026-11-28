@@ -82,11 +82,11 @@ main,.layout,.tabview,.panel,.chat-panel,#accountArea,.chat-workspace,.chat-main
 @media(max-width:650px){.developer-contact-grid{grid-template-columns:1fr;gap:11px}.contact-card{padding:16px;border-radius:17px}.contact-logo{width:52px;height:52px;flex-basis:52px}.contact-copy strong{font-size:15px}}
 </style></head><body>
 <header><div class="brand"><div class="mark"><svg class="ali-mark-svg" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="aliA" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse"><stop stop-color="#22C9B2"/><stop offset=".52" stop-color="#7764FF"/><stop offset="1" stop-color="#FF8A78"/></linearGradient></defs><path d="M32 7 55 50H44L32 27 20 50H9L32 7Z" fill="url(#aliA)"/><path d="M23 40h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="55" r="3" fill="#fff"/></svg></div><div><h1>ALI AI PLATFORM</h1><small>ONE PLATFORM · MANY POSSIBILITIES</small></div></div><div class="account-head"><span id="authStatus" class="live">● منصة الذكاء الاصطناعي</span><button id="headerLogin" class="primary" type="button">تسجيل الدخول</button><button id="headerLogout" type="button" style="display:none">تسجيل الخروج</button></div></header>
-<main><section class="intro"><div><h2>مساحة العمل الذكية</h2><p>كل أدواتك ومحادثاتك ومشاريعك في مكان واحد.</p></div><div class="stats"><div class="stat"><b id="staffCount">30</b><span>موظفاً افتراضياً</span></div><div class="stat"><b id="atdesks">30</b><span>على مكاتبهم</span></div><div class="stat"><b id="done">0</b><span>أنشطة المحاكاة</span></div></div></section>
+<main><section class="intro"><div><h2>مساحة العمل الذكية</h2><p>كل أدواتك ومحادثاتك ومشاريعك في مكان واحد.</p></div><div class="stats"><div class="stat"><b id="staffCount">30</b><span>موظفاً افتراضياً</span></div><div class="stat"><b id="atdesks">30</b><span>على مكاتبهم</span></div><div class="stat"><b id="done">0</b><span>طلبات تمت مساعدتها</span></div></div></section>
 <nav class="tabs" aria-label="أقسام المنصة"><button class="active" data-tab="assistantTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></span><span class="nav-label">المساعد الذكي</span></button><button data-tab="conversationsTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-5 4v-4.4A2.5 2.5 0 0 1 4 13.5v-8Z"/><path d="M8 8h8M8 11.5h5"/></svg></span><span class="nav-label">محادثاتي</span></button><button data-tab="requests"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-10Z"/><path d="M8 13h8M8 16h5"/></svg></span><span class="nav-label">مشاريعي</span></button><button data-tab="buildingTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M8 9h.01M12 9h.01M16 9h.01M8 12h.01M16 12h.01"/></svg></span><span class="nav-label">مركز المنصة</span></button><button data-tab="employeesTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="9.5" cy="7" r="3.5"/><path d="M17 11a3.5 3.5 0 1 0-1-6.9M21 20v-1.5a4 4 0 0 0-3-3.87"/></svg></span><span class="nav-label">الموظفون</span></button><button data-tab="companyTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg></span><span class="nav-label">عن المنصة</span></button><button data-tab="developerContactTab"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.8 7.3L3 20l1.3-4.8A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 9.2c.7 2.2 2.1 3.6 4.3 4.3"/></svg></span><span class="nav-label">التواصل مع مطور المنصة</span></button></nav><section class="tabview active" id="assistantTab"><div class="assistant-layout"><section class="panel chat-panel"><div class="panelhead"><b>مساعد ALI AI</b><span>ALI AI ASSISTANT</span></div><div id="chatGate" class="chat-gate"><h3>أهلاً بك في ALI AI</h3><p>سجّل الدخول وابدأ مساحة عملك الخاصة.</p><div class="login-actions"><a id="googleLogin" class="login-link provider-login google-login" href="https://ali-ai-company-cloud.omf09947.workers.dev/auth/google/start"><svg class="provider-svg google-svg" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11a9.4 9.4 0 0 1-4.1 6.2v5.1h6.6c3.9-3.6 6.1-8.8 6.1-15Z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.1c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4H5.8v5.3A20 20 0 0 0 24 44Z"/><path fill="#FBBC05" d="M12.6 27.6a12 12 0 0 1 0-7.2v-5.3H5.8a20 20 0 0 0 0 17.8l6.8-5.3Z"/><path fill="#EA4335" d="M24 12c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6 29.5 4 24 4A20 20 0 0 0 5.8 15.1l6.8 5.3C14.2 15.6 18.7 12 24 12Z"/></svg><span>المتابعة باستخدام Google</span><svg class="provider-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div><div id="accountArea" style="display:none"><div class="chat-toolbar"><div class="chat-toolbar-actions"><button id="newConversation" class="icon-action new-chat-trigger" type="button" title="محادثة جديدة" aria-label="محادثة جديدة">✎</button><div class="chat-menu-wrap"><button id="conversationMenuToggle" class="icon-action menu-trigger" type="button" aria-label="خيارات المحادثة" aria-expanded="false" title="خيارات المحادثة">⋯</button><div id="conversationMenu" class="conversation-menu"><button data-action="share">مشاركة</button><button data-action="rename">تغيير العنوان</button><button data-action="pin">تثبيت / إلغاء التثبيت</button><button data-action="lock">تعيين / إزالة رمز PIN</button><button data-action="add">إضافة إلى مشاريعي</button><button data-action="files">الملفات المرفوعة</button><button data-action="search">بحث في الدردشة</button><button data-action="install">إضافة إلى الشاشة الرئيسية</button><button data-action="archive">أرشفة / استعادة</button><button data-action="delete" class="danger-action">حذف المحادثة</button></div></div><div class="chat-current-title"><strong id="currentConversationTitle">محادثة جديدة</strong><span id="userInfo" class="user-info"></span></div></div></div><div class="chat-workspace"><div class="chat-main"><div id="chatMessages" class="chat-messages"><div class="welcome-chat"><div class="welcome-mark">A</div><h2>بماذا تفكر اليوم؟</h2><p>ابدأ محادثة جديدة، وسأساعدك في تحويل أفكارك إلى خطوات واضحة.</p></div></div><div class="chat-compose"><textarea id="chatInput" rows="2" maxlength="6000" placeholder="اكتب سؤالك أو العمل الذي تريد المساعدة به..."></textarea><button class="primary" id="sendChat" type="button">إرسال</button></div><div id="chatNotice" class="note">تُحفظ رسائلك تلقائياً ضمن حسابك.</div></div></div></div></section><aside class="side"><section class="panel" style="padding:17px"><h3>مساحة عملك</h3><p class="detail">محادثاتك ومشاريعك محفوظة ضمن حسابك.</p></section><section class="panel" style="padding:17px"><h3>ALI AI PLATFORM</h3><p class="detail">منصة ذكية تجمع أفكارك ومحادثاتك ومشاريعك في مساحة واحدة.</p></section></aside></div></section>
 <section class="tabview" id="conversationsTab"><section class="panel"><div class="panelhead"><b>محادثاتي</b><span>محادثاتك المحفوظة في حسابك</span></div><div class="conversation-library"><div class="conversation-library-intro">اختر محادثة لفتحها ومتابعة الحديث من حيث توقفت.</div><div id="conversationArchiveList" class="conversation-library-list"><div class="note">سجّل الدخول لعرض محادثاتك.</div></div></div></section></section>
-<section class="tabview" id="buildingTab"><div class="layout"><section class="panel"><div class="panelhead"><b>المساحة الافتراضية للمنصة</b><span>VIRTUAL WORKSPACE</span></div><div class="viewport"><canvas id="scene" width="1400" height="1100"></canvas></div><div class="controls"><button class="primary" id="start">▶ تشغيل يوم العمل</button><button id="pause">إيقاف مؤقت</button><button id="call">استدعاء المحدد للمدير</button><button id="meet">اجتماع جماعي</button><button id="return">عودة للمكاتب</button></div></section>
-<aside class="side"><section class="panel"><h3>نشاط المحاكاة</h3><div class="log" id="log"><div>تم فتح كاميرا السقف الافتراضية.<time>الآن</time></div></div></section></aside></div></section>
+<section class="tabview" id="buildingTab"><div class="layout"><section class="panel"><div class="panelhead"><b>المساحة الافتراضية للمنصة</b><span>VIRTUAL WORKSPACE</span></div><div class="viewport"><canvas id="scene" width="1400" height="1100"></canvas></div><div class="controls"><button class="primary meeting-button" id="meet" type="button">✦ بدء الاجتماع</button><span class="scene-hint">تتحرك الشخصيات عند إرسال طلب للمساعد الذكي أو بدء الاجتماع.</span></div></section>
+<aside class="side"><section class="panel"><h3>مركز متابعة الفريق</h3><div class="manager-card"><div class="manager-orb">A</div><div><b>المدير التنفيذي</b><small>يتابع طلبات المستخدم ويوجه الفريق</small></div></div><div class="log" id="log"><div>المركز جاهز لاستقبال طلباتك.<time>الآن</time></div></div></section></aside></div></section>
 <section class="tabview" id="requests"><section class="panel"><div class="panelhead"><b>مشاريعي المحفوظة</b><span>خاصة بحسابك فقط</span></div><div style="padding:15px"><div id="projectCreator" style="display:none;margin-bottom:16px"><label for="projectBrief" style="display:block;color:var(--gold);font-size:12px;margin-bottom:8px">إنشاء مشروع جديد</label><textarea id="projectBrief" rows="3" maxlength="5000" placeholder="اكتب فكرة المشروع والنتيجة التي تريد الوصول إليها..." style="width:100%;resize:vertical;min-height:86px;background:#091827;color:#eef4fa;border:1px solid #405b73;border-radius:9px;padding:12px;font:12px Tahoma"></textarea><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:9px"><button class="primary" id="createProject" type="button">إنشاء خطة المشروع</button><span id="projectNotice" class="note" aria-live="polite"></span></div></div><div id="taskBoard" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="note">سجّل الدخول لعرض مشاريعك المحفوظة.</div></div><button id="refreshProjects" style="margin-top:14px">تحديث المشاريع</button><p class="note">تُحفظ المشاريع في حسابك السحابي، ولا تظهر للمستخدمين الآخرين.</p></div></section></section>
 <section class="tabview" id="employeesTab"><div class="directory-grid"><section class="panel"><div class="panelhead"><b>دليل فريق المنصة</b><span>فريق ALI AI</span></div><div class="employees" id="employees" style="padding:12px;max-height:680px"></div></section><section class="panel" style="padding:16px"><h3>ملف الموظف</h3><div class="detail" id="detail">—</div></section></div></section>
 <section class="tabview" id="companyTab"><div class="company-grid"><div class="info-card"><h3>ALI AI PLATFORM</h3><b>ONE PLATFORM · MANY POSSIBILITIES</b><br>منصة ذكية تجمع فرق العمل والأفكار والمشاريع.</div><div class="info-card"><h3>الإدارة والعمليات</h3>المدير التنفيذي · إدارة المشاريع · تنسيق العمليات · التخطيط.</div><div class="info-card"><h3>التطوير والتقنية</h3>برمجة المواقع · التطبيقات · الأنظمة · البيانات · الجودة.</div><div class="info-card"><h3>التصميم والإبداع</h3>الهوية البصرية · تجربة المستخدم · التصميم · النمذجة والتحريك · الإنتاج المرئي.</div><div class="info-card"><h3>الذكاء الاصطناعي</h3>البحث · الوكلاء الذكيون · الأتمتة · تنظيم سير العمل.</div><div class="info-card"><h3>مساحات العمل</h3>الإدارة · قاعة الاجتماعات · الاستقبال · أقسام العمل · الاستراحة.</div></div></section>
@@ -120,7 +120,7 @@ const names=[['مساعد المدير','EA','الإدارة'],['مدير الم
 const rooms=[{x:45,y:300,w:420,h:490,n:'الإدارة والعمليات والمالية',col:'#263e50'},{x:490,y:300,w:420,h:490,n:'البرمجة والتقنية والذكاء الاصطناعي',col:'#244457'},{x:935,y:300,w:420,h:490,n:'التصميم والإعلام والبحث',col:'#3c3c4d'}];
 const desks=[];rooms.forEach((r,k)=>[r.y+75,r.y+165,r.y+255,r.y+345,r.y+435].forEach(y=>[r.x+115,r.x+305].forEach(x=>desks.push({x,y,room:k}))));
 const agents=names.map((n,i)=>({id:i,name:n[0],code:n[1],dept:n[2],x:desks[i].x,y:desks[i].y+37,home:{x:desks[i].x,y:desks[i].y+37},path:[],state:'على مكتبه',task:'يعمل على الحاسوب',wait:0,phase:i*.7}));
-let selected=0,running=false,last=0,clock=0,done=0;let companyTasks=[];let taskSeq=1;try{companyTasks=JSON.parse(localStorage.getItem('aliCompanyTasks')||'[]');taskSeq=companyTasks.reduce((m,t)=>Math.max(m,(t.id||0)+1),1)}catch(e){companyTasks=[]}
+let selected=0,last=0,done=0;let companyTasks=[];let taskSeq=1;try{companyTasks=JSON.parse(localStorage.getItem('aliCompanyTasks')||'[]');taskSeq=companyTasks.reduce((m,t)=>Math.max(m,(t.id||0)+1),1)}catch(e){companyTasks=[]}
 const manager={x:205,y:155};
 function box(x,y,w,h,col,stroke='#72889b',lw=3){c.fillStyle=col;c.fillRect(x,y,w,h);c.strokeStyle=stroke;c.lineWidth=lw;c.strokeRect(x,y,w,h)}
 function txt(t,x,y,size=15,col='#e6eef5'){c.fillStyle=col;c.font='bold '+size+'px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(t,x,y)}
@@ -138,29 +138,72 @@ rooms.forEach(room);rooms.forEach((r,k)=>{for(let j=0;j<10;j++){let d=desks[k*10
 box(50,885,1295,170,'#203747','#758b9d',3);txt('الخدمات والطباعة والاستراحة',700,915,15);box(120,950,225,65,'#465d6b','#9aabb6',2);txt('الطابعة المركزية',232,988,13);box(520,950,260,65,'#465d6b','#9aabb6',2);txt('منطقة الاستراحة',650,988,13);box(1035,950,225,65,'#465d6b','#9aabb6',2);txt('أرشيف الملفات',1147,988,13)
 }
 function person(a){
- const x=a.x,y=a.y+Math.sin(a.phase*5)*1.2,shirt=['#b77d5f','#628db1','#927ba9','#6c9b86','#bd985b'][a.id%5],hair=['#30251f','#45362b','#202b36'][a.id%3];
+ const x=a.x,y=a.y+Math.sin(a.phase*3.4)*1.5,shirt=['#d38b68','#69a8d2','#a78bc9','#69b994','#d2ae65'][a.id%5],hair=['#30251f','#45362b','#202b36'][a.id%3],moving=a.path.length>0;
+ const swing=moving?Math.sin(a.phase*8)*5:Math.sin(a.phase*2)*1.2;
  c.save();
- c.fillStyle='#0008';c.beginPath();c.ellipse(x,y+17,15,5,0,0,Math.PI*2);c.fill();
+ c.shadowColor='#0009';c.shadowBlur=15;c.shadowOffsetY=8;c.fillStyle='#0008';c.beginPath();c.ellipse(x,y+17,15,5,0,0,Math.PI*2);c.fill();c.shadowBlur=0;c.shadowOffsetY=0;
  c.lineCap='round';c.lineJoin='round';
- c.strokeStyle='#29384a';c.lineWidth=5;c.beginPath();c.moveTo(x-4,y+10);c.lineTo(x-6,y+19);c.moveTo(x+4,y+10);c.lineTo(x+6,y+19);c.stroke();
- c.fillStyle='#29384a';c.fillRect(x-9,y+18,7,3);c.fillRect(x+3,y+18,7,3);
- c.strokeStyle=shirt;c.lineWidth=5;c.beginPath();c.moveTo(x-7,y-1);c.lineTo(x-13,y+8);c.moveTo(x+7,y-1);c.lineTo(x+13,y+8);c.stroke();
- c.fillStyle=shirt;c.beginPath();c.moveTo(x-7,y-6);c.quadraticCurveTo(x,y-10,x+7,y-6);c.lineTo(x+8,y+11);c.quadraticCurveTo(x,y+15,x-8,y+11);c.closePath();c.fill();
- c.fillStyle='#e6c58e';c.beginPath();c.moveTo(x-3,y-6);c.lineTo(x,y-1);c.lineTo(x+3,y-6);c.fill();
- c.fillStyle='#d7a47e';c.fillRect(x-2,y-12,4,7);c.beginPath();c.ellipse(x,y-17,8,9,0,0,Math.PI*2);c.fill();
- c.fillStyle=hair;c.beginPath();c.arc(x,y-19,8,Math.PI,Math.PI*2);c.quadraticCurveTo(x+7,y-18,x+6,y-15);c.quadraticCurveTo(x,y-18,x-7,y-14);c.closePath();c.fill();
- c.fillStyle='#35251e';c.beginPath();c.arc(x-3,y-16,1,0,Math.PI*2);c.arc(x+3,y-16,1,0,Math.PI*2);c.fill();
- c.strokeStyle='#8c5e49';c.lineWidth=1;c.beginPath();c.arc(x,y-13,2,0.2,Math.PI-.2);c.stroke();
- c.fillStyle='#f0d89d';c.fillRect(x+3,y+1,3,5);
- if(a.state==='على مكتبه'){c.fillStyle='#8de0b7';c.beginPath();c.arc(x+13,y-25,3,0,Math.PI*2);c.fill()}
- c.fillStyle='#f3f5f7';c.font='10px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText(a.name,x,y+34);
- if(a.id===selected){c.strokeStyle='#f2cb73';c.lineWidth=2;c.beginPath();c.ellipse(x,y+1,19,31,0,0,Math.PI*2);c.stroke()}
+ c.strokeStyle='#263447';c.lineWidth=5;c.beginPath();c.moveTo(x-4,y+9);c.lineTo(x-6-swing*.25,y+19);c.moveTo(x+4,y+9);c.lineTo(x+6+swing*.25,y+19);c.stroke();
+ c.fillStyle='#182b40';c.fillRect(x-10,y+18,8,4);c.fillRect(x+2,y+18,8,4);
+ const sg=c.createLinearGradient(x-13,y-8,x+14,y+12);sg.addColorStop(0,shirt);sg.addColorStop(1,'#243e5a');
+ c.strokeStyle=shirt;c.lineWidth=5;c.beginPath();c.moveTo(x-7,y-2);c.lineTo(x-13,y+8+swing*.25);c.moveTo(x+7,y-2);c.lineTo(x+13,y+8-swing*.25);c.stroke();
+ c.fillStyle=sg;c.beginPath();c.moveTo(x-8,y-7);c.quadraticCurveTo(x,y-12,x+8,y-7);c.lineTo(x+9,y+11);c.quadraticCurveTo(x,y+15,x-9,y+11);c.closePath();c.fill();
+ c.strokeStyle='#ffffff55';c.lineWidth=1.4;c.beginPath();c.moveTo(x-5,y-5);c.lineTo(x-4,y+8);c.stroke();
+ c.fillStyle='#e8d6b1';c.beginPath();c.moveTo(x-3,y-7);c.lineTo(x,y-1);c.lineTo(x+3,y-7);c.fill();
+ c.fillStyle='#d7a47e';c.fillRect(x-2,y-13,4,7);c.beginPath();c.ellipse(x,y-18,8,9,0,0,Math.PI*2);c.fill();
+ c.fillStyle=hair;c.beginPath();c.arc(x,y-20,8,Math.PI,Math.PI*2);c.quadraticCurveTo(x+8,y-18,x+6,y-14);c.quadraticCurveTo(x,y-18,x-7,y-14);c.closePath();c.fill();
+ c.fillStyle='#30251f';c.beginPath();c.arc(x-3,y-17,1,0,Math.PI*2);c.arc(x+3,y-17,1,0,Math.PI*2);c.fill();
+ c.strokeStyle='#8c5e49';c.lineWidth=1;c.beginPath();c.arc(x,y-14,2,0.2,Math.PI-.2);c.stroke();
+ c.fillStyle='#f4d78e';c.fillRect(x+3,y+1,3,5);
+ if(a.state==='على مكتبه'){c.fillStyle='#72e6ba';c.shadowColor='#72e6ba';c.shadowBlur=10;c.beginPath();c.arc(x+13,y-25,3,0,Math.PI*2);c.fill();c.shadowBlur=0}
+ if(a.path.length){c.fillStyle='#8ce9ff';c.shadowColor='#8ce9ff';c.shadowBlur=12;c.beginPath();c.arc(x,y-34,3,0,Math.PI*2);c.fill();c.shadowBlur=0}
+ c.fillStyle='#f3f5f7';c.font='bold 10px Tahoma';c.textAlign='center';c.direction='rtl';c.shadowColor='#06111d';c.shadowBlur=5;c.fillText(a.name,x,y+34);c.shadowBlur=0;
+ if(a.id===selected){c.strokeStyle='#f2cb73';c.lineWidth=2;c.shadowColor='#f2cb73';c.shadowBlur=12;c.beginPath();c.ellipse(x,y+1,20,32,0,0,Math.PI*2);c.stroke();c.shadowBlur=0}
  c.restore();
 }
-function render(){building();agents.forEach(person);c.fillStyle='#e6ca8d';c.beginPath();c.arc(manager.x,manager.y,10,0,Math.PI*2);c.fill();c.fillStyle='#172333';c.fillRect(manager.x-8,manager.y+8,16,17);txt('المدير',manager.x,manager.y+42,11,'#f2d99e');txt('كاميرا السقف',1290,880,10,'#d9e4ec')}
-function route(a,dest){let k=desks[a.id].room,door=[255,700,1145][k];let p;if(dest==='manager')p=[[door,800],[700,835],[700,265],[207,265],[207,185]];else if(dest==='meeting')p=[[door,800],[700,835],[700,265],[592,265],[592,205]];else if(dest==='printer')p=[[door,800],[700,835],[700,875],[232,875],[232,935]];else p=[[door,800],[700,835],[700,265],[door,265],[a.home.x,a.home.y]];a.path=p;a.dest=dest;a.state=dest==='manager'?'عند المدير':dest==='meeting'?'في الاجتماع':dest==='printer'?'عند الطابعة':'راجع لمكتبه';a.task=dest==='manager'?'مراجعة العمل مع المدير':dest==='meeting'?'مناقشة مع الفريق':dest==='printer'?'طباعة مستندات':'العودة إلى مكتبه'}
+function drawManager(){
+ const x=manager.x,y=manager.y,glow=12+Math.sin(performance.now()/500)*3;
+ c.save();c.shadowColor='#e7c77c';c.shadowBlur=glow;c.fillStyle='#e7c77c';c.beginPath();c.ellipse(x,y+16,18,6,0,0,Math.PI*2);c.fill();c.shadowBlur=0;
+ const g=c.createLinearGradient(x-10,y-5,x+10,y+24);g.addColorStop(0,'#f2d99e');g.addColorStop(1,'#98713d');c.fillStyle=g;c.beginPath();c.moveTo(x-9,y-3);c.lineTo(x+9,y-3);c.lineTo(x+12,y+23);c.lineTo(x-12,y+23);c.closePath();c.fill();
+ c.fillStyle='#d7a47e';c.beginPath();c.arc(x,y-13,9,0,Math.PI*2);c.fill();c.fillStyle='#30251f';c.beginPath();c.arc(x,y-16,9,Math.PI,Math.PI*2);c.fill();
+ c.fillStyle='#fff0c9';c.font='bold 11px Tahoma';c.textAlign='center';c.direction='rtl';c.fillText('المدير التنفيذي',x,y+43);
+ c.restore();
+}
+function render(){building();agents.forEach(person);drawManager();txt('ALI AI • COMMAND CENTER',1150,70,12,'#b7e8ef');}
+function route(a,dest){
+ let k=desks[a.id].room,door=[255,700,1145][k],p;
+ if(dest==='manager')p=[[door,800],[700,835],[700,265],[207,265],[207,185]];
+ else if(dest==='meeting')p=[[door,800],[700,835],[700,265],[592,265],[592,205]];
+ else if(dest==='assistant')p=[[door,800],[700,835],[700,265],[700,310],[700,420]];
+ else if(dest==='printer')p=[[door,800],[700,835],[700,875],[232,875],[232,935]];
+ else p=[[door,800],[700,835],[700,265],[door,265],[a.home.x,a.home.y]];
+ a.path=p;a.dest=dest;
+ a.state=dest==='manager'?'عند المدير':dest==='meeting'?'في الاجتماع':dest==='assistant'?'يساعد في طلب المستخدم':dest==='printer'?'عند الطابعة':'راجع لمكتبه';
+ a.task=dest==='manager'?'مراجعة الطلب مع المدير':dest==='meeting'?'مناقشة مع الفريق':dest==='assistant'?'تنفيذ جزء من طلب المستخدم':dest==='printer'?'طباعة مستندات':'العودة إلى مكتبه';
+}
 function move(a,dt){if(!a.path.length)return;let p=a.path[0],dx=p[0]-a.x,dy=p[1]-a.y,d=Math.hypot(dx,dy),s=105*dt;if(d<s){a.x=p[0];a.y=p[1];a.path.shift()}else{a.x+=dx/d*s;a.y+=dy/d*s}a.phase+=dt*4;if(!a.path.length){if(a.dest==='return'){a.state='على مكتبه';a.task='يعمل على الحاسوب';a.dest=null}else a.wait=3}}
-function tick(dt){agents.forEach(a=>{if(a.path.length)move(a,dt);else if(a.wait>0){a.wait-=dt;if(a.wait<=0){done++;document.getElementById('done').textContent=done;route(a,'return')}}});document.getElementById('atdesks').textContent=agents.filter(a=>a.state==='على مكتبه').length}
+function tick(dt){
+ agents.forEach(a=>{
+  if(a.path.length)move(a,dt);
+  else if(a.wait>0){a.wait-=dt;if(a.wait<=0){if(a.dest==='return'){a.state='على مكتبه';a.task='يعمل على الحاسوب';a.dest=null}else{done++;document.getElementById('done').textContent=done;route(a,'return')}}}
+  else a.phase+=dt*.7;
+ });
+ document.getElementById('atdesks').textContent=agents.filter(a=>a.state==='على مكتبه').length;
+}
+function dispatchTeamForRequest(message){
+ const q=message.toLowerCase();
+ let pool;
+ if(/تصميم|صورة|صور|فيديو|مونتاج|شعار|واجهة|ألوان|تحريك/.test(q))pool=[12,14,19,20,21,22,23];
+ else if(/برمج|كود|موقع|تطبيق|مشكلة|خطأ|تقني|نظام|قاعدة بيانات|api/.test(q))pool=[5,6,7,15,16,17,18,26];
+ else if(/بحث|تحليل|خطة|مشروع|دراسة|بيانات|سوق|مقارنة/.test(q))pool=[1,3,8,9,10];
+ else if(/حساب|دعم|مساعدة|تسجيل|دخول|محادث|ملف/.test(q))pool=[0,4,24,28,2];
+ else pool=[0,1,4,24,2,3];
+ const available=pool.map(i=>agents[i]).filter(a=>a&&!a.path.length&&!a.wait&&a.state==='على مكتبه');
+ const team=available.slice(0,Math.min(3,available.length));
+ if(!team.length){log('الفريق المختص مشغول حالياً؛ سيستمر المساعد الذكي بالرد عليك.');return}
+ team.forEach(a=>route(a,'assistant'));
+ log('وصل طلب جديد؛ تحرك '+team.map(a=>a.name).join('، ')+' لدعم المساعد الذكي.');
+}
 function log(s){let d=document.createElement('div');d.textContent=s;let t=document.createElement('time');t.textContent=new Date().toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit'});d.append(t);let l=document.getElementById('log');l.prepend(d);while(l.children.length>16)l.lastChild.remove()}
 function renderTasks(){
  const board=document.getElementById('taskBoard');if(!board)return;board.innerHTML='';
@@ -430,6 +473,7 @@ async function sendChat() {
     if (!activeConversationId) await createConversation();
     appendChatMessage("user", content);
     input.value = "";
+    dispatchTeamForRequest(content);
     document.getElementById("sendChat").disabled = true;
     document.getElementById("chatNotice").textContent = "المساعد يكتب الآن...";
     const result = await api("/api/chat", {
@@ -496,12 +540,14 @@ document.getElementById("createProject").onclick = async () => {
 })();
 function select(i){selected=i;let a=agents[i];document.getElementById('detail').innerHTML='<b>'+a.name+'</b><br>القسم: '+a.dept+'<br>المكتب: '+(i+1)+'<br>الحالة: '+a.state+'<br>النشاط: '+a.task;document.querySelectorAll('.employee').forEach((e,j)=>e.classList.toggle('active',j===i));render()}
 names.forEach((p,i)=>{let e=document.createElement('div');e.className='employee'+(i===0?' active':'');e.innerHTML='<div class="face">'+p[1].slice(0,2)+'</div><div><strong>'+p[0]+'</strong><small>'+p[2]+'</small></div>';e.onclick=()=>select(i);document.getElementById('employees').append(e)});
-function call(){let a=agents[selected];if(a.path.length||a.wait){log('الموظف مشغول حالياً.');return}route(a,'manager');log('توجه '+a.name+' إلى مكتب المدير.')}
-function meeting(){agents.forEach(a=>{if(!a.path.length&&!a.wait&&a.state==='على مكتبه')route(a,'meeting')});log('بدأ الاجتماع، والفريق يتوجه إلى قاعة الاجتماعات.')}
-function home(){agents.forEach(a=>{a.wait=0;if(a.state!=='على مكتبه')route(a,'return')});log('صدرت تعليمات عودة الموظفين إلى مكاتبهم.')}
+function meeting(){
+ let count=0;
+ agents.forEach(a=>{if(!a.path.length&&!a.wait&&a.state==='على مكتبه'){route(a,'meeting');count++}});
+ log(count?'بدأ الاجتماع؛ يتوجه الفريق إلى القاعة.':'الفريق مشغول حالياً.');
+}
 cv.addEventListener('click',e=>{let r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width,y=(e.clientY-r.top)*cv.height/r.height,b=-1,d0=30;agents.forEach((a,i)=>{let d=Math.hypot(a.x-x,a.y-y);if(d<d0){d0=d;b=i}});if(b>=0)select(b)});
-document.getElementById('start').onclick=()=>{running=true;log('بدأ يوم العمل الافتراضي.')};document.getElementById('pause').onclick=()=>{running=false;log('تم إيقاف الحركة مؤقتاً.')};document.getElementById('call').onclick=call;document.getElementById('meet').onclick=meeting;document.getElementById('return').onclick=home;
-function loop(t){let dt=Math.min((t-last)/1000||0,.05);last=t;if(running){clock+=dt;tick(dt);if(clock>5){clock=0;let idle=agents.filter(a=>!a.path.length&&!a.wait&&a.state==='على مكتبه');if(idle.length){let a=idle[Math.floor(Math.random()*idle.length)],v=Math.random();route(a,v<.6?'printer':v<.82?'manager':'meeting');log(a.name+' بدأ نشاطاً جديداً: '+a.task)}}}else agents.forEach(a=>a.phase+=dt*.7);render();requestAnimationFrame(loop)}
+document.getElementById('meet').onclick=meeting;
+function loop(t){let dt=Math.min((t-last)/1000||0,.05);last=t;tick(dt);render();requestAnimationFrame(loop)}
 document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{const target=document.getElementById(btn.dataset.tab);document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('main > .tabview').forEach(section=>section.classList.toggle('active',section===target));if(target){target.scrollIntoView({behavior:'smooth',block:'start'});target.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:320,easing:'ease-out'});}if(btn.dataset.tab==='employeesTab')select(selected);if(btn.dataset.tab==='requests'&&sessionToken)loadProjects();if(btn.dataset.tab==='conversationsTab'&&sessionToken)loadConversations()}));select(0);requestAnimationFrame(loop);
 </script><script src="./motion.js?v=1" defer></script><script src="./evolution.js?v=1" defer></script>
 <style>
@@ -513,4 +559,25 @@ main > .tabview.active>.panel,main > .tabview.active>.layout,main > .tabview.act
 #companyTab .company-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 #requests,#buildingTab,#employeesTab,#companyTab{content-visibility:auto;contain-intrinsic-size:800px}
 @media(prefers-reduced-motion:reduce){.tabview{content-visibility:visible}}
+ 
+/* Virtual command center: cinematic depth, responsive controls and character motion */
+#buildingTab .layout{grid-template-columns:minmax(0,1fr) 285px;align-items:start;gap:18px}
+#buildingTab .panel{border:1px solid #6b7e9c66;background:linear-gradient(145deg,#172944ee,#0a1425f5);box-shadow:0 24px 70px #0008,inset 0 1px #ffffff10}
+#buildingTab .panelhead{background:linear-gradient(90deg,#ffffff08,transparent);color:#f2dfb6;letter-spacing:.4px}
+#buildingTab .viewport{padding:18px;background:radial-gradient(ellipse at 50% 10%,#2b4565,#0b1425 70%);perspective:1100px}
+#buildingTab .viewport canvas{min-width:0;width:100%;border:1px solid #9bb9d755;border-radius:16px;box-shadow:0 25px 55px #0009,0 0 28px #7edfff12;transform:rotateX(1.2deg);transform-origin:center top}
+#buildingTab .controls{align-items:center;justify-content:center;gap:12px;padding:17px}
+#buildingTab .meeting-button{min-width:190px;padding:14px 24px;border:1px solid #f6dfa2;background:linear-gradient(135deg,#f5dfaa,#b98742);color:#15243a;font-weight:900;box-shadow:0 12px 30px #d7b66c30;letter-spacing:.3px}
+#buildingTab .meeting-button:hover{transform:translateY(-3px);box-shadow:0 17px 34px #d7b66c55}
+#buildingTab .scene-hint{color:#a9bdd2;font-size:10px;line-height:1.8;text-align:center}
+#buildingTab .side .panel{padding:16px}
+#buildingTab .side h3{color:#e9d39a;font-size:14px}
+#buildingTab .manager-card{display:flex;align-items:center;gap:11px;padding:12px;margin:0 0 14px;border:1px solid #d8b56b35;border-radius:14px;background:linear-gradient(120deg,#d8b56b15,#7bd7ef0a)}
+#buildingTab .manager-orb{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#f2dda7,#9a713a);color:#152238;font-weight:900;font-size:20px;box-shadow:0 0 22px #e9ca8140}
+#buildingTab .manager-card b{display:block;color:#f4e5c0;font-size:12px}
+#buildingTab .manager-card small{display:block;color:#9fb3ca;font-size:9px;margin-top:5px;line-height:1.6}
+#buildingTab .log div{border-right-color:#70d7e7;background:#ffffff05;border-radius:7px;padding:7px 10px;margin:0 0 8px}
+#buildingTab .stat b{color:#8ce5ed}
+@media(max-width:1000px){#buildingTab .layout{grid-template-columns:1fr}#buildingTab .side{display:block}#buildingTab .side .panel{margin-top:12px}}
+@media(max-width:620px){#buildingTab .viewport{padding:7px}#buildingTab .viewport canvas{width:100%;min-width:0;transform:none}#buildingTab .controls{padding:12px}#buildingTab .meeting-button{width:100%}}
 </style></body></html>
