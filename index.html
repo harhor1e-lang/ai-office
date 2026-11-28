@@ -60,7 +60,8 @@ main,.layout,.tabview,.panel,.chat-panel,#accountArea,.chat-workspace,.chat-main
 @media(max-width:360px){.chat-current-title{max-width:calc(100vw - 130px)}.chat-current-title .user-info{display:none}.chat-toolbar{gap:5px}.icon-action{width:39px;height:39px;min-width:39px;flex-basis:39px}.chat-compose{flex-wrap:wrap}.chat-compose button{width:100%}.brand small{display:none}}
 @media(orientation:landscape) and (max-height:500px){.chat-messages{height:42vh}.conversation-menu{max-height:55vh}.company-intro{padding:12px}}
 @media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}*,*:before,*:after{scroll-behavior:auto!important}}
-</style></head><body>
+</style><link rel="stylesheet" href="./motion.css?v=1">
+</head><body>
 <div class="company-intro" id="companyIntro" aria-label="ALI AI COMPANY"><div class="intro-core"><div class="intro-emblem">A</div><div class="intro-kicker">ONE VISION · MANY AI AGENTS</div><h1>ALI AI COMPANY</h1><p>INTELLIGENCE · CREATIVITY · EXECUTION</p><button class="intro-enter" id="enterCompany" type="button">دخول إلى الشركة</button></div></div>
 <header><div class="brand"><div class="mark">A</div><div><h1>ALI AI COMPANY</h1><small>ONE VISION · MANY AI AGENTS</small></div></div><div class="account-head"><span id="authStatus" class="live">● منصة الذكاء الاصطناعي</span><button id="headerLogin" class="primary" type="button">تسجيل الدخول</button><button id="headerLogout" type="button" style="display:none">تسجيل الخروج</button></div></header>
 <main><section class="intro"><div><h2>مساحة العمل الذكية</h2><p>كل أدواتك ومحادثاتك ومشاريعك في مكان واحد.</p></div><div class="stats"><div class="stat"><b id="staffCount">30</b><span>موظفاً افتراضياً</span></div><div class="stat"><b id="atdesks">30</b><span>على مكاتبهم</span></div><div class="stat"><b id="done">0</b><span>أنشطة المحاكاة</span></div></div></section>
@@ -465,4 +466,5 @@ cv.addEventListener('click',e=>{let r=cv.getBoundingClientRect(),x=(e.clientX-r.
 document.getElementById('start').onclick=()=>{running=true;log('بدأ يوم العمل الافتراضي.')};document.getElementById('pause').onclick=()=>{running=false;log('تم إيقاف الحركة مؤقتاً.')};document.getElementById('call').onclick=call;document.getElementById('meet').onclick=meeting;document.getElementById('return').onclick=home;
 function loop(t){let dt=Math.min((t-last)/1000||0,.05);last=t;if(running){clock+=dt;tick(dt);if(clock>5){clock=0;let idle=agents.filter(a=>!a.path.length&&!a.wait&&a.state==='على مكتبه');if(idle.length){let a=idle[Math.floor(Math.random()*idle.length)],v=Math.random();route(a,v<.6?'printer':v<.82?'manager':'meeting');log(a.name+' بدأ نشاطاً جديداً: '+a.task)}}}else agents.forEach(a=>a.phase+=dt*.7);render();requestAnimationFrame(loop)}
 document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabview').forEach(v=>v.classList.toggle('active',v.id===btn.dataset.tab));if(btn.dataset.tab==='employeesTab')select(selected);if(btn.dataset.tab==='requests'&&sessionToken)loadProjects();if(btn.dataset.tab==='conversationsTab'&&sessionToken)loadConversations()}));select(0);requestAnimationFrame(loop);
-</script></body></html>
+</script><script src="./motion.js?v=1" defer></script>
+</body></html>
